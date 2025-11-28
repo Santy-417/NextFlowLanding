@@ -1,0 +1,102 @@
+{
+  "common": {
+    "learnMore": "Learn more",
+    "contactUs": "Contact us",
+    "viewMore": "View more",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "projects": "Projects",
+    "clients": "Clients",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Transform your business with",
+    "titleHighlight": "Software and AI Automation",
+    "subtitle": "Custom web/mobile development, intelligent automation, and technology consulting to take your company to the next level.",
+    "cta": "Schedule a free consultation",
+    "ctaSecondary": "View projects"
+  },
+  "about": {
+    "title": "Meet the Team",
+    "subtitle": "We are NextFlow",
+    "description": "A team of experts passionate about technology and innovation, dedicated to transforming manual processes into automated solutions.",
+    "founders": "Founders",
+    "team": "Team"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "What we do?",
+    "description": "We offer comprehensive technology solutions to boost your business."
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Success Stories",
+    "description": "Discover how we've helped companies transform their processes.",
+    "filterAll": "All",
+    "filterAutomation": "Automation",
+    "filterAI": "Artificial Intelligence",
+    "filterWeb": "Web Development",
+    "filterMobile": "Mobile Development",
+    "howItWorks": "How it works?",
+    "problemSolved": "Problem solved",
+    "technologies": "Technologies"
+  },
+  "clients": {
+    "title": "Satisfied Clients",
+    "subtitle": "Real Success Stories",
+    "description": "Companies that trusted us and transformed their processes.",
+    "problem": "Problem",
+    "solution": "Solution",
+    "benefits": "Benefits",
+    "testimonial": "Testimonial"
+  },
+  "cta": {
+    "title": "Ready to transform your business?",
+    "subtitle": "Schedule a free consultation and discover how we can help you",
+    "button": "Schedule now"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We're here to help",
+    "description": "Tell us about your project and we'll get back to you in less than 24 hours.",
+    "form": {
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "company": "Company (optional)",
+      "message": "Message",
+      "submit": "Send message",
+      "sending": "Sending...",
+      "successMessage": "Message sent successfully! We'll respond soon.",
+      "errorMessage": "There was an error sending the message. Please try again."
+    },
+    "info": {
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "social": "Social Media"
+    }
+  },
+  "footer": {
+    "description": "Software development and AI automation in Colombia.",
+    "sections": {
+      "company": "Company",
+      "services": "Services",
+      "legal": "Legal",
+      "social": "Follow us"
+    },
+    "links": {
+      "about": "About",
+      "projects": "Projects",
+      "blog": "Blog",
+      "privacy": "Privacy Policy",
+      "terms": "Terms and Conditions"
+    },
+    "copyright": "© 2025 NextFlow. All rights reserved."
+  }
+}

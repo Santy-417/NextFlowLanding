@@ -1,0 +1,51 @@
+{
+  "name": "nextflow-landing",
+  "version": "1.0.0",
+  "description": "NextFlow - Desarrollo de Software y Automatizaciones con IA",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "pm2:start": "pm2 start npm --name nextflow -- start",
+    "pm2:stop": "pm2 stop nextflow",
+    "pm2:restart": "pm2 restart nextflow",
+    "pm2:logs": "pm2 logs nextflow",
+    "pm2:status": "pm2 status"
+  },
+  "dependencies": {
+    "next": "^15.0.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@mui/material": "^6.1.7",
+    "@mui/icons-material": "^6.1.7",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@tanstack/react-query": "^5.59.20",
+    "react-hook-form": "^7.53.2",
+    "axios": "^1.7.9",
+    "next-intl": "^3.23.5",
+    "framer-motion": "^11.11.17",
+    "nodemailer": "^6.9.16",
+    "zod": "^3.23.8",
+    "@hookform/resolvers": "^3.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.3",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
+    "@types/nodemailer": "^6.4.16",
+    "typescript": "^5.6.3",
+    "tailwindcss": "^3.4.15",
+    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.15.0",
+    "eslint-config-next": "^15.0.3"
+  },
+  "engines": {
+    "node": ">=18.19.1",
+    "npm": ">=9.0.0"
+  }
+}

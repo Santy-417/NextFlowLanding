@@ -1,0 +1,102 @@
+{
+  "common": {
+    "learnMore": "Conocer más",
+    "contactUs": "Contáctanos",
+    "viewMore": "Ver más",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Nosotros",
+    "services": "Servicios",
+    "projects": "Proyectos",
+    "clients": "Clientes",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "title": "Transformamos tu negocio con",
+    "titleHighlight": "Software y Automatizaciones con IA",
+    "subtitle": "Desarrollo web/móvil a medida, automatizaciones inteligentes y consultoría tecnológica para llevar tu empresa al siguiente nivel.",
+    "cta": "Agenda una consultoría gratuita",
+    "ctaSecondary": "Ver proyectos"
+  },
+  "about": {
+    "title": "Conoce al Equipo",
+    "subtitle": "Somos NextFlow",
+    "description": "Un equipo de expertos apasionados por la tecnología y la innovación, dedicados a transformar procesos manuales en soluciones automatizadas.",
+    "founders": "Fundadores",
+    "team": "Equipo"
+  },
+  "services": {
+    "title": "Nuestros Servicios",
+    "subtitle": "¿Qué hacemos?",
+    "description": "Ofrecemos soluciones tecnológicas completas para impulsar tu negocio."
+  },
+  "projects": {
+    "title": "Proyectos",
+    "subtitle": "Casos de Éxito",
+    "description": "Descubre cómo hemos ayudado a empresas a transformar sus procesos.",
+    "filterAll": "Todos",
+    "filterAutomation": "Automatización",
+    "filterAI": "Inteligencia Artificial",
+    "filterWeb": "Desarrollo Web",
+    "filterMobile": "Desarrollo Móvil",
+    "howItWorks": "¿Cómo funciona?",
+    "problemSolved": "Problema resuelto",
+    "technologies": "Tecnologías"
+  },
+  "clients": {
+    "title": "Clientes Satisfechos",
+    "subtitle": "Casos de Éxito Reales",
+    "description": "Empresas que confiaron en nosotros y transformaron sus procesos.",
+    "problem": "Problema",
+    "solution": "Solución",
+    "benefits": "Beneficios",
+    "testimonial": "Testimonio"
+  },
+  "cta": {
+    "title": "¿Listo para transformar tu negocio?",
+    "subtitle": "Agenda una consultoría gratuita y descubre cómo podemos ayudarte",
+    "button": "Agenda ahora"
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "subtitle": "Estamos aquí para ayudarte",
+    "description": "Cuéntanos sobre tu proyecto y te responderemos en menos de 24 horas.",
+    "form": {
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "phone": "Teléfono (opcional)",
+      "company": "Empresa (opcional)",
+      "message": "Mensaje",
+      "submit": "Enviar mensaje",
+      "sending": "Enviando...",
+      "successMessage": "¡Mensaje enviado con éxito! Te responderemos pronto.",
+      "errorMessage": "Hubo un error al enviar el mensaje. Por favor intenta nuevamente."
+    },
+    "info": {
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "social": "Redes Sociales"
+    }
+  },
+  "footer": {
+    "description": "Desarrollo de software y automatizaciones con IA en Colombia.",
+    "sections": {
+      "company": "Empresa",
+      "services": "Servicios",
+      "legal": "Legal",
+      "social": "Síguenos"
+    },
+    "links": {
+      "about": "Nosotros",
+      "projects": "Proyectos",
+      "blog": "Blog",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos y Condiciones"
+    },
+    "copyright": "© 2025 NextFlow. Todos los derechos reservados."
+  }
+}
