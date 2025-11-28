@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { getRequestConfig } from 'next-intl/server';
 
 // Idiomas soportados
@@ -9,14 +8,18 @@ export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'es';
 
 // Configuración de next-intl
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ requestLocale }) => {
+  // Await requestLocale en Next.js 15
+  let locale = await requestLocale;
+
   // Validar que el locale es uno de los soportados
-  if (!locales.includes(locale as Locale)) {
-    notFound();
+  if (!locale || !locales.includes(locale as Locale)) {
+    locale = defaultLocale;
   }
 
   return {
-    messages: (await import(`@/data/translations/${locale}.json`)).default,
+    locale,
+    messages: (await import(`../data/translations/${locale}.json`)).default,
   };
 });
 

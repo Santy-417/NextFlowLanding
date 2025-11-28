@@ -1,13 +1,9 @@
 /** @type {import('next').NextConfig} */
 
-const withNextIntl = require('next-intl/plugin')(
-  './lib/i18n.ts'
-);
+const createNextIntlPlugin = require('next-intl/plugin');
+const withNextIntl = createNextIntlPlugin('./lib/i18n.ts');
 
 const nextConfig = {
-  // Configuración de i18n
-  // next-intl maneja las rutas automáticamente
-
   // Optimización de imágenes
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -46,11 +42,6 @@ const nextConfig = {
   // Compilación optimizada
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
-  },
-
-  // Experimental features
-  experimental: {
-    optimizePackageImports: ['@mui/material', '@mui/icons-material'],
   },
 
   // React strict mode
