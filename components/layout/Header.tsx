@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { AppBar, Toolbar, Container, Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Container, Box, IconButton, Menu, MenuItem, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -16,7 +17,6 @@ interface HeaderProps {
 
 const navItems = [
   { key: 'home', href: '#' },
-  { key: 'about', href: '#about' },
   { key: 'services', href: '#services' },
   { key: 'projects', href: '#projects' },
   { key: 'contact', href: '#contact' },
@@ -45,36 +45,74 @@ export default function Header({ isDarkMode, onToggleTheme }: HeaderProps) {
       }}
     >
       <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ justifyContent: 'space-between', py: 1 }}>
+        <Toolbar disableGutters sx={{ py: 1 }}>
+          {/* Logo */}
+          <Box
+            component={Link}
+            href="#"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexGrow: 0,
+              cursor: 'pointer',
+              textDecoration: 'none',
+              '& img': {
+                height: 'auto',
+                maxHeight: '40px',
+                transition: 'opacity 0.3s ease',
+              },
+              '&:hover img': {
+                opacity: 0.8,
+              },
+            }}
+          >
+            <Image
+              src="/logoNextFlowMenu.png"
+              alt="NextFlow Logo"
+              width={120}
+              height={40}
+              priority
+            />
+          </Box>
+
           {/* Desktop Navigation */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, flexGrow: 1, justifyContent: 'center' }}>
             {navItems.map((item) => (
-              <Link
+              <Button
                 key={item.key}
                 href={item.href}
-                style={{
-                  color: 'white',
-                  textDecoration: 'none',
-                  padding: '8px 16px',
-                  fontSize: '14px',
+                component={Link}
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  fontSize: '0.9rem',
                   fontWeight: 500,
-                  textTransform: 'uppercase',
                   letterSpacing: '0.5px',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '4px',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#8B5CF6';
-                  e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
+                  px: 2.5,
+                  py: 1,
+                  textTransform: 'none',
+                  position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: '2px',
+                    background: 'linear-gradient(90deg, #8B5CF6, #3B82F6)',
+                    transition: 'width 0.3s ease',
+                  },
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: 'white',
+                    '&::after': {
+                      width: '80%',
+                    },
+                  },
                 }}
               >
                 {t(item.key)}
-              </Link>
+              </Button>
             ))}
           </Box>
 
