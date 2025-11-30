@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { Box, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
+import WireframeBackground from '@/components/ui/WireframeBackground';
+import FloatingParticles from '@/components/ui/FloatingParticles';
 
 /**
- * About Section - Sección del equipo con animaciones al entrar en viewport
- * Diseño: Fotos en los extremos, contenido centrado
+ * About Section - Sección del equipo rediseñada con efectos modernos 3D
+ * Incluye: Grid wireframe 3D, partículas flotantes, orbs de luz, animaciones mejoradas
  */
 
 export default function AboutSection() {
@@ -21,7 +22,7 @@ export default function AboutSection() {
         }
       },
       {
-        threshold: 0.1,
+        threshold: 0.2,
         rootMargin: '0px',
       }
     );
@@ -45,384 +46,272 @@ export default function AboutSection() {
         position: 'relative',
         width: '100vw',
         minHeight: '100vh',
-        background: '#0A0A0A',
+        maxHeight: '100vh',
+        overflow: 'hidden',
       }}
     >
-      {/* Desktop: Dos columnas lado a lado */}
+      {/* Fondo más negro */}
       <Box
         sx={{
-          display: { xs: 'none', md: 'flex' },
+          position: 'absolute',
+          top: 0,
+          left: 0,
           width: '100%',
+          height: '100%',
+          background: '#000000',
+          zIndex: 0,
+        }}
+      />
+
+      {/* Fondo wireframe 3D animado - morado */}
+      <WireframeBackground />
+
+      {/* Partículas flotantes globales */}
+      <FloatingParticles count={25} />
+
+      {/* Contenedor principal con 3 columnas */}
+      <Box
+        sx={{
           minHeight: '100vh',
+          maxHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           position: 'relative',
+          zIndex: 10,
+          overflow: 'hidden',
+          padding: { xs: '20px', md: '40px' },
         }}
       >
-        {/* Columna Izquierda - Santiago */}
-        <Box
-          sx={{
-            width: '50%',
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            position: 'relative',
-            background: 'linear-gradient(135deg, #000000 0%, #0A0A0A 50%, #111111 100%)',
-            py: 8,
-          }}
-        >
-          {/* Imagen Santiago - Extremo izquierdo con animación */}
-          <Box
-            sx={{
-              position: 'absolute',
-              left: 0,
-              width: { md: '45%', lg: '40%' },
-              height: '80%',
-              borderRadius: '0 12px 12px 0',
-              overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(168, 85, 247, 0.3)',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(-100px)',
-              transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              '& img': {
-                objectFit: 'cover',
-              },
-            }}
-          >
-            <Image
-              src="/images/FotoSantiago.jpg"
-              alt="Santiago Chavarro"
-              fill
-              priority
-            />
-          </Box>
+        <Container maxWidth="xl" sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+          <Grid container spacing={0} sx={{ height: '100%', alignItems: 'center' }}>
 
-          {/* Descripción a la derecha de la imagen con animación retrasada */}
-          <Box
-            sx={{
-              position: 'absolute',
-              right: { md: '5%', lg: '8%' },
-              maxWidth: '380px',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-            }}
-          >
-            <Typography
-              variant="h3"
+            {/* COLUMNA IZQUIERDA - Imagen Santiago */}
+            <Grid
+              item
+              xs={12}
+              md={3}
               sx={{
-                color: '#FFFFFF',
-                fontWeight: 700,
-                mb: 1,
-                fontSize: { md: '2.5rem', lg: '3rem' },
-                letterSpacing: '-0.02em',
-                opacity: isVisible ? 1 : 0,
-                transition: 'opacity 0.6s ease 0.3s',
+                display: { xs: 'none', md: 'flex' },
+                justifyContent: 'flex-start',
+                alignItems: 'flex-end',
+                height: '100%',
+                pl: { md: 2, lg: 4 },
               }}
             >
-              Santiago Chavarro
-            </Typography>
-            <Typography
-              sx={{
-                background: 'linear-gradient(90deg, #C026D3 0%, #E879F9 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                fontWeight: 600,
-                mb: 2,
-                fontSize: '1.2rem',
-                opacity: isVisible ? 1 : 0,
-                transition: 'opacity 0.6s ease 0.4s',
-              }}
-            >
-              Co-fundador & CEO
-            </Typography>
-            <Typography
-              sx={{
-                color: '#D1D5DB',
-                fontSize: { md: '0.95rem', lg: '1rem' },
-                lineHeight: 1.8,
-                fontWeight: 300,
-                opacity: isVisible ? 1 : 0,
-                transition: 'opacity 0.6s ease 0.5s',
-              }}
-            >
-              Santiago es un desarrollador que piensa primero en la arquitectura y después en el código, lo cual ya lo pone por encima del promedio de &quot;programadores&quot; que solo saben copiar soluciones de internet. Su enfoque está en crear aplicaciones web y móviles que funcionen bien bajo presión: limpias, mantenibles y escalables.
-            </Typography>
-          </Box>
-        </Box>
+              <Box
+                component="img"
+                src="/images/FotoSantiago.png"
+                alt="Santiago Chavarro"
+                sx={{
+                  height: { md: '380px', lg: '400px' },
+                  width: 'auto',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 20px 50px rgba(232, 121, 249, 0.4))',
+                  transition: 'all 0.4s ease',
+                  opacity: isVisible ? 1 : 0,
+                  transform: isVisible ? 'translateX(0)' : 'translateX(-50px)',
+                  transitionDelay: '0.4s',
+                  '&:hover': {
+                    transform: 'translateY(-15px)',
+                    filter: 'drop-shadow(0 30px 60px rgba(232, 121, 249, 0.6))',
+                  },
+                }}
+              />
+            </Grid>
 
-        {/* Columna Derecha - Samuel */}
-        <Box
-          sx={{
-            width: '50%',
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            position: 'relative',
-            background: 'linear-gradient(225deg, #000000 0%, #0A0A0A 50%, #111111 100%)',
-            py: 8,
-          }}
-        >
-          {/* Descripción a la izquierda de la imagen con animación retrasada */}
-          <Box
-            sx={{
-              position: 'absolute',
-              left: { md: '5%', lg: '8%' },
-              maxWidth: '380px',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-            }}
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                color: '#FFFFFF',
-                fontWeight: 700,
-                mb: 1,
-                fontSize: { md: '2.5rem', lg: '3rem' },
-                letterSpacing: '-0.02em',
-                opacity: isVisible ? 1 : 0,
-                transition: 'opacity 0.6s ease 0.3s',
-              }}
-            >
-              Samuel Aristizabal
-            </Typography>
-            <Typography
-              sx={{
-                background: 'linear-gradient(90deg, #06B6D4 0%, #E879F9 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                fontWeight: 600,
-                mb: 2,
-                fontSize: '1.2rem',
-                opacity: isVisible ? 1 : 0,
-                transition: 'opacity 0.6s ease 0.4s',
-              }}
-            >
-              Co-fundador & CTO
-            </Typography>
-            <Typography
-              sx={{
-                color: '#D1D5DB',
-                fontSize: { md: '0.95rem', lg: '1rem' },
-                lineHeight: 1.8,
-                fontWeight: 300,
-                opacity: isVisible ? 1 : 0,
-                transition: 'opacity 0.6s ease 0.5s',
-              }}
-            >
-              Samuel es un ingeniero de software orientado a resultados, alguien que no pierde tiempo en features innecesarias y prioriza lo que mueve la aguja. Destaca por su capacidad para integrar tecnologías modernas y convertir requerimientos difusos en sistemas estables y bien diseñados.
-            </Typography>
-          </Box>
+            {/* COLUMNA CENTRAL - Contenido */}
+            <Grid item xs={12} md={6}>
+              <Box sx={{ textAlign: 'center', px: { xs: 2, md: 4 } }}>
 
-          {/* Imagen Samuel - Extremo derecho con animación */}
-          <Box
-            sx={{
-              position: 'absolute',
-              right: 0,
-              width: { md: '45%', lg: '40%' },
-              height: '80%',
-              borderRadius: '12px 0 0 12px',
-              overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(6, 182, 212, 0.3)',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(100px)',
-              transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              '& img': {
-                objectFit: 'cover',
-              },
-            }}
-          >
-            <Image
-              src="/images/FotoSamuFull.png"
-              alt="Samuel Aristizabal"
-              fill
-              priority
-            />
-          </Box>
-        </Box>
-      </Box>
+                {/* Título */}
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' },
+                    fontWeight: 700,
+                    background: 'linear-gradient(135deg, #E879F9, #A855F7, #06B6D4)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    mb: 6,
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'scale(1)' : 'scale(0.9)',
+                    transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                >
+                  Nuestro Equipo
+                </Typography>
 
-      {/* Mobile: Apiladas verticalmente */}
-      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-        {/* Santiago - Mobile */}
-        <Box
-          sx={{
-            width: '100vw',
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            px: 3,
-            py: 12,
-            background: 'linear-gradient(135deg, #000000 0%, #0A0A0A 50%, #111111 100%)',
-          }}
-        >
-          {/* Imagen arriba con animación */}
-          <Box
-            sx={{
-              position: 'relative',
-              width: '100%',
-              maxWidth: '320px',
-              height: '400px',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(168, 85, 247, 0.4)',
-              mb: 6,
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'scale(1)' : 'scale(0.9)',
-              transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              '& img': {
-                objectFit: 'cover',
-              },
-            }}
-          >
-            <Image
-              src="/images/FotoSantiago.jpg"
-              alt="Santiago Chavarro"
-              fill
-              priority
-            />
-          </Box>
+                {/* Grid de información de ambos fundadores */}
+                <Grid container spacing={4}>
 
-          {/* Texto abajo con animación retrasada */}
-          <Box
-            sx={{
-              textAlign: 'center',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-            }}
-          >
-            <Typography
-              variant="h4"
-              sx={{
-                color: '#FFFFFF',
-                fontWeight: 700,
-                mb: 1,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Santiago Chavarro
-            </Typography>
-            <Typography
-              sx={{
-                background: 'linear-gradient(90deg, #C026D3 0%, #E879F9 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                fontWeight: 600,
-                mb: 3,
-                fontSize: '1.1rem',
-              }}
-            >
-              Co-fundador & CEO
-            </Typography>
-            <Typography
-              sx={{
-                color: '#D1D5DB',
-                fontSize: '0.95rem',
-                lineHeight: 1.8,
-                maxWidth: '400px',
-                mx: 'auto',
-              }}
-            >
-              Santiago es un desarrollador que piensa primero en la arquitectura y después en el código, lo cual ya lo pone por encima del promedio de &quot;programadores&quot; que solo saben copiar soluciones de internet. Su enfoque está en crear aplicaciones web y móviles que funcionen bien bajo presión: limpias, mantenibles y escalables.
-            </Typography>
-          </Box>
-        </Box>
+                  {/* Info Santiago */}
+                  <Grid item xs={12} md={6}>
+                    <Box
+                      sx={{
+                        opacity: isVisible ? 1 : 0,
+                        transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
+                        transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s',
+                      }}
+                    >
+                      {/* Imagen en mobile */}
+                      <Box
+                        component="img"
+                        src="/images/FotoSantiago.png"
+                        alt="Santiago Chavarro"
+                        sx={{
+                          display: { xs: 'block', md: 'none' },
+                          height: '250px',
+                          width: 'auto',
+                          maxWidth: '100%',
+                          objectFit: 'contain',
+                          mx: 'auto',
+                          mb: 3,
+                          filter: 'drop-shadow(0 15px 40px rgba(232, 121, 249, 0.4))',
+                        }}
+                      />
 
-        {/* Samuel - Mobile */}
-        <Box
-          sx={{
-            width: '100vw',
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            px: 3,
-            py: 12,
-            background: 'linear-gradient(225deg, #000000 0%, #0A0A0A 50%, #111111 100%)',
-          }}
-        >
-          {/* Imagen arriba con animación */}
-          <Box
-            sx={{
-              position: 'relative',
-              width: '100%',
-              maxWidth: '320px',
-              height: '400px',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(6, 182, 212, 0.4)',
-              mb: 6,
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'scale(1)' : 'scale(0.9)',
-              transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              '& img': {
-                objectFit: 'cover',
-              },
-            }}
-          >
-            <Image
-              src="/images/FotoSamuFull.png"
-              alt="Samuel Aristizabal"
-              fill
-              priority
-            />
-          </Box>
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          fontSize: { xs: '1.5rem', md: '2rem' },
+                          fontWeight: 700,
+                          color: '#FFFFFF',
+                          mb: 1,
+                        }}
+                      >
+                        Santiago Chavarro
+                      </Typography>
 
-          {/* Texto abajo con animación retrasada */}
-          <Box
-            sx={{
-              textAlign: 'center',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-            }}
-          >
-            <Typography
-              variant="h4"
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '1rem', md: '1.25rem' },
+                          fontWeight: 500,
+                          color: '#E879F9',
+                          mb: 2,
+                        }}
+                      >
+                        Co-fundador & CEO
+                      </Typography>
+
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '0.875rem', md: '1rem' },
+                          fontWeight: 300,
+                          color: '#D1D5DB',
+                          lineHeight: 1.7,
+                          textAlign: { xs: 'center', md: 'left' },
+                        }}
+                      >
+                        Santiago es un desarrollador que piensa primero en la arquitectura y después en el código, lo cual ya lo pone por encima del promedio de &quot;programadores&quot; que solo saben copiar soluciones de internet. Su enfoque está en crear aplicaciones web y móviles que funcionen bien bajo presión: limpias, mantenibles y escalables.
+                      </Typography>
+                    </Box>
+                  </Grid>
+
+                  {/* Info Samuel */}
+                  <Grid item xs={12} md={6}>
+                    <Box
+                      sx={{
+                        opacity: isVisible ? 1 : 0,
+                        transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
+                        transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
+                      }}
+                    >
+                      {/* Imagen en mobile */}
+                      <Box
+                        component="img"
+                        src="/images/FotoSamuFull.png"
+                        alt="Samuel Aristizabal"
+                        sx={{
+                          display: { xs: 'block', md: 'none' },
+                          height: '250px',
+                          width: 'auto',
+                          maxWidth: '100%',
+                          objectFit: 'contain',
+                          mx: 'auto',
+                          mb: 3,
+                          filter: 'drop-shadow(0 15px 40px rgba(6, 182, 212, 0.4))',
+                        }}
+                      />
+
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          fontSize: { xs: '1.5rem', md: '2rem' },
+                          fontWeight: 700,
+                          color: '#FFFFFF',
+                          mb: 1,
+                        }}
+                      >
+                        Samuel Aristizabal
+                      </Typography>
+
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '1rem', md: '1.25rem' },
+                          fontWeight: 500,
+                          color: '#06B6D4',
+                          mb: 2,
+                        }}
+                      >
+                        Co-fundador & CTO
+                      </Typography>
+
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '0.875rem', md: '1rem' },
+                          fontWeight: 300,
+                          color: '#D1D5DB',
+                          lineHeight: 1.7,
+                          textAlign: { xs: 'center', md: 'left' },
+                        }}
+                      >
+                        Samuel es un ingeniero de software orientado a resultados, alguien que no pierde tiempo en features innecesarias y prioriza lo que mueve la aguja. Destaca por su capacidad para integrar tecnologías modernas y convertir requerimientos difusos en sistemas estables y bien diseñados.
+                      </Typography>
+                    </Box>
+                  </Grid>
+
+                </Grid>
+              </Box>
+            </Grid>
+
+            {/* COLUMNA DERECHA - Imagen Samuel */}
+            <Grid
+              item
+              xs={12}
+              md={3}
               sx={{
-                color: '#FFFFFF',
-                fontWeight: 700,
-                mb: 1,
-                letterSpacing: '-0.02em',
+                display: { xs: 'none', md: 'flex' },
+                justifyContent: 'flex-end',
+                alignItems: 'flex-end',
+                height: '100%',
+                pr: { md: 2, lg: 4 },
               }}
             >
-              Samuel Aristizabal
-            </Typography>
-            <Typography
-              sx={{
-                background: 'linear-gradient(90deg, #06B6D4 0%, #E879F9 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                fontWeight: 600,
-                mb: 3,
-                fontSize: '1.1rem',
-              }}
-            >
-              Co-fundador & CTO
-            </Typography>
-            <Typography
-              sx={{
-                color: '#D1D5DB',
-                fontSize: '0.95rem',
-                lineHeight: 1.8,
-                maxWidth: '400px',
-                mx: 'auto',
-              }}
-            >
-              Samuel es un ingeniero de software orientado a resultados, alguien que no pierde tiempo en features innecesarias y prioriza lo que mueve la aguja. Destaca por su capacidad para integrar tecnologías modernas y convertir requerimientos difusos en sistemas estables y bien diseñados.
-            </Typography>
-          </Box>
-        </Box>
+              <Box
+                component="img"
+                src="/images/FotoSamuFull.png"
+                alt="Samuel Aristizabal"
+                sx={{
+                  height: { md: '380px', lg: '400px' },
+                  width: 'auto',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 20px 50px rgba(6, 182, 212, 0.4))',
+                  transition: 'all 0.4s ease',
+                  opacity: isVisible ? 1 : 0,
+                  transform: isVisible ? 'translateX(0)' : 'translateX(50px)',
+                  transitionDelay: '0.5s',
+                  '&:hover': {
+                    transform: 'translateY(-15px)',
+                    filter: 'drop-shadow(0 30px 60px rgba(6, 182, 212, 0.6))',
+                  },
+                }}
+              />
+            </Grid>
+
+          </Grid>
+        </Container>
       </Box>
     </section>
   );
