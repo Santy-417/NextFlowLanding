@@ -25,18 +25,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Servidor de desarrollo en puerto 3000
 
 # Build y producción
-npm run build        # Build de producción
-npm start            # Iniciar servidor de producción
-npm run type-check   # Verificar tipos de TypeScript
+npm run build        # Build de producción (requiere pasar type-check y lint)
+npm start            # Iniciar servidor de producción en puerto 3000
+npm run type-check   # Verificar tipos de TypeScript (strict mode)
 npm run lint         # Ejecutar ESLint
 
 # Deploy con PM2 (Hostinger)
-npm run pm2:start    # Iniciar con PM2
+npm run pm2:start    # Iniciar con PM2 (nombre: "nextflow")
 npm run pm2:restart  # Reiniciar aplicación
 npm run pm2:stop     # Detener aplicación
-npm run pm2:logs     # Ver logs
-npm run pm2:status   # Ver estado
+npm run pm2:logs     # Ver logs en tiempo real
+npm run pm2:status   # Ver estado de todos los procesos PM2
 ```
+
+**NOTA**: El build de producción tiene las siguientes optimizaciones:
+- `removeConsole: true` - Elimina todos los console.log en producción
+- Strict mode de TypeScript habilitado (`noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`)
+- Security headers configurados (X-Frame-Options, CSP, etc.)
 
 ## Arquitectura del Proyecto
 
@@ -69,8 +74,24 @@ Los datos se manejan de forma **estática** en archivos TypeScript para fácil a
 El proyecto usa rutas dinámicas con locale:
 - `/es/*` - Rutas en español (default)
 - `/en/*` - Rutas en inglés
+- `/` - Redirige automáticamente a `/es` (ver `app/page.tsx`)
 
-**next-intl** maneja la internacionalización automáticamente a través de `app/[locale]/layout.tsx`.
+**Arquitectura de layouts con Next.js 15**:
+- `app/layout.tsx` - Layout raíz mínimo (solo pasa children, sin HTML tags)
+- `app/[locale]/layout.tsx` - Layout principal con `<html>` y `<body>`, incluye metadata, next-intl provider
+- **CRÍTICO - Next.js 15 Breaking Change**: `params` es ahora una Promise y DEBE usarse con `await`:
+  ```typescript
+  // ✅ CORRECTO en Next.js 15
+  const { locale } = await params;
+
+  // ❌ INCORRECTO - causará errores
+  const { locale } = params;
+  ```
+
+**next-intl** maneja la internacionalización automáticamente a través de:
+- `middleware.ts` - Middleware que maneja el routing de locales (siempre usa prefijo)
+- `lib/i18n.ts` - Configuración de locales soportados (`['es', 'en']`) y locale default (`'es'`)
+- `app/[locale]/layout.tsx` - Provider de next-intl
 
 ### Theme System
 
@@ -79,8 +100,18 @@ El proyecto usa rutas dinámicas con locale:
   - Primary (Morado): `#8B5CF6`
   - Secondary (Azul): `#3B82F6`
   - Accent (Magenta): `#D946EF` - Usar para CTAs
+  - Hero Background: `#0f0720` - Morado oscuro profundo para HeroSection
+  - Neon Effects: `#b800ff`, `#ff00d4`, `#ff00f7` - Para blobs difuminados
 - **Modo oscuro**: Manejado por Providers con localStorage persistence
 - **Tailwind**: Integrado con MUI, usar utility classes cuando sea apropiado
+
+### Background Effects en HeroSection
+
+El HeroSection usa efectos de iluminación orgánica con:
+- **Blobs difuminados**: Gradientes radiales con `filter: blur()` para crear efectos de luz
+- **Curva neon ondulada**: Usa `conic-gradient` con `maskImage` para efecto de curva
+- **Animaciones float**: Movimiento orgánico de los blobs con keyframes
+- **Responsive**: Tamaños de blobs adaptativos según breakpoints (xs, sm, md, lg)
 
 ## Estructura de Componentes
 
@@ -162,9 +193,21 @@ trackEvent('whatsapp_click', { source: 'floating_button' });
 
 ## Patrones de Código
 
+### TypeScript Configuration
+
+El proyecto usa **TypeScript strict mode** con reglas estrictas:
+- `strict: true` - Modo estricto completo
+- `noUnusedLocals: true` - No permite variables locales sin usar
+- `noUnusedParameters: true` - No permite parámetros sin usar
+- `noImplicitReturns: true` - Todas las rutas deben retornar un valor
+- `noFallthroughCasesInSwitch: true` - Previene fall-through en switches
+- `forceConsistentCasingInFileNames: true` - Nombres de archivos case-sensitive
+
+**IMPORTANTE**: Siempre ejecutar `npm run type-check` antes de commit.
+
 ### Import Paths
 
-Usar alias `@/` para imports:
+Usar alias `@/` para imports (configurado en `tsconfig.json`):
 
 ```typescript
 import { Button } from '@/components/ui/Button';
@@ -186,10 +229,17 @@ const { elementRef, isVisible } = useScrollAnimation({ triggerOnce: true });
 
 ### Componentes Client vs Server
 
-- **Server Components** (default): Páginas, layouts
-- **Client Components** (`'use client'`): Interactividad, hooks, estado
+- **Server Components** (default): Páginas, layouts, componentes estáticos
+- **Client Components** (`'use client'`): Interactividad, hooks, estado, event handlers
 
 **Regla**: Solo agregar `'use client'` cuando sea necesario (hooks, eventos, estado).
+
+**Ejemplos de cuándo usar Client Components**:
+- Componentes que usan `useState`, `useEffect`, `useContext`
+- Componentes con event handlers (`onClick`, `onChange`, etc.)
+- Componentes que usan hooks de next-intl (`useTranslations`, `useLocale`)
+- Componentes que usan hooks personalizados (`useScrollAnimation`, `useContactForm`)
+- Componentes de MUI que requieren interactividad (Modal, Dialog, etc.)
 
 ## Imágenes y Assets
 
@@ -319,15 +369,43 @@ Asegurar que `.env.local` en el servidor tenga:
 - IDs de analytics configurados
 - Info de redes sociales
 
+## Security & Performance
+
+### Security Headers (next.config.js)
+
+El proyecto incluye headers de seguridad configurados:
+- `X-DNS-Prefetch-Control: on` - Mejora performance de DNS
+- `X-Frame-Options: SAMEORIGIN` - Previene clickjacking
+- `X-Content-Type-Options: nosniff` - Previene MIME type sniffing
+- `Referrer-Policy: origin-when-cross-origin` - Control de referrer
+
+### Image Optimization
+
+Configurado en `next.config.js`:
+- Formatos: AVIF y WebP para mejor compresión
+- Device sizes: Optimizado para múltiples dispositivos
+- Image sizes: 16px a 384px para diferentes usos
+
+**Uso**: Siempre usar el componente `next/image` en lugar de `<img>` tags.
+
+### Build Optimizations
+
+- **Production**: `removeConsole: true` elimina todos los console.log
+- **React Strict Mode**: Habilitado para detectar problemas
+- **TypeScript**: Build falla si hay errores de tipo
+- **ESLint**: Build falla si hay errores de linting
+
 ## SEO
 
 El proyecto incluye:
-- Meta tags optimizados en `app/layout.tsx`
+- Meta tags optimizados en `app/[locale]/layout.tsx` (no en `app/layout.tsx`)
 - Open Graph tags para redes sociales
 - Sitemap en `public/robots.txt`
 - `robots.txt` configurado
 
 **Imagen OG**: Debe existir en `public/images/og-image.jpg` (1200x630px)
+
+**NOTA**: Con la arquitectura de i18n, los metadata están en el layout del locale, no en el layout raíz.
 
 ## Debugging
 
@@ -387,6 +465,25 @@ npm run build
 npm run pm2:logs
 ```
 
+### Error: Locale no detectado / Redirección incorrecta
+
+Verificar que `middleware.ts` esté configurado correctamente:
+- El middleware debe exportar el matcher que excluya `api`, `_next`, archivos estáticos
+- `localePrefix: 'always'` asegura que todas las rutas tengan el prefijo de locale
+- Verificar que `lib/i18n.ts` exporte correctamente `locales` y `defaultLocale`
+
+### Error: `params` is not defined o type error con params
+
+En Next.js 15, `params` es una Promise. Asegurarse de usar `await`:
+
+```typescript
+// En cualquier page.tsx o layout.tsx
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  // ...
+}
+```
+
 ## Team Information
 
 **Equipo NextFlow** (actualizar en `data/team.ts` si cambia):
@@ -408,4 +505,4 @@ npm run pm2:logs
 
 ---
 
-**Última actualización**: 2025-01-27
+**Última actualización**: 2025-11-28
