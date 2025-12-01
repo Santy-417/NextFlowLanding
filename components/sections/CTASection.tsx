@@ -61,6 +61,34 @@ export default function CTASection() {
         paddingBottom: '100px',
       }}
     >
+      {/* Difuminado superior para transición suave desde sección anterior */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '25%',
+          background: 'linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 30%, rgba(0, 0, 0, 0.3) 60%, transparent 100%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
+
+      {/* Difuminado inferior para transición suave a siguiente sección */}
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '25%',
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 1) 100%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
+
       <Container maxWidth="md">
         <Box
           sx={{

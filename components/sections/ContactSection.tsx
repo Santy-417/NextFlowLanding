@@ -52,6 +52,20 @@ export default function ContactSection() {
         paddingBottom: '100px',
       }}
     >
+      {/* Difuminado inferior para transición suave al footer */}
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '30%',
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 1) 100%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
+
       <Container maxWidth="lg">
         {/* Título */}
         <Box

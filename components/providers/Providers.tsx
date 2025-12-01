@@ -4,7 +4,7 @@ import { ReactNode, useState, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { lightTheme, darkTheme } from '@/lib/theme';
+import { darkTheme } from '@/lib/theme';
 import { initAnalytics } from '@/lib/analytics';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -17,9 +17,9 @@ interface ProvidersProps {
 /**
  * Componente principal de Providers
  * Incluye ThemeProvider, QueryClientProvider y layout general
+ * Tema oscuro configurado por defecto
  */
 export default function Providers({ children }: ProvidersProps) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -32,43 +32,18 @@ export default function Providers({ children }: ProvidersProps) {
       })
   );
 
-  // Inicializar analytics al montar el componente
+  // Inicializar analytics y tema oscuro al montar el componente
   useEffect(() => {
     initAnalytics();
+    // Siempre usar tema oscuro
+    document.documentElement.classList.add('dark');
   }, []);
-
-  // Cargar preferencia de tema desde localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  // Toggle de tema
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => {
-      const newValue = !prev;
-      localStorage.setItem('theme', newValue ? 'dark' : 'light');
-
-      if (newValue) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-
-      return newValue;
-    });
-  };
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MuiThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <MuiThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
+        <Header />
         {children}
         <Footer />
         <WhatsAppButton />
