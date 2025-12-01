@@ -6,14 +6,6 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { AppBar, Toolbar, Container, Box, IconButton, Menu, MenuItem, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import LanguageToggle from './LanguageToggle';
-
-interface HeaderProps {
-  isDarkMode: boolean;
-  onToggleTheme: () => void;
-}
 
 const navItems = [
   { key: 'home', href: '#' },
@@ -22,7 +14,7 @@ const navItems = [
   { key: 'contact', href: '#contact' },
 ];
 
-export default function Header({ isDarkMode, onToggleTheme }: HeaderProps) {
+export default function Header() {
   const t = useTranslations('nav');
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -177,42 +169,6 @@ export default function Header({ isDarkMode, onToggleTheme }: HeaderProps) {
 
           {/* Right side controls */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            {/* Theme Toggle */}
-            <IconButton
-              onClick={onToggleTheme}
-              size="small"
-              sx={{
-                color: 'rgba(255, 255, 255, 0.8)',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  color: '#FFFFFF',
-                  transform: 'scale(1.1)',
-                  filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.6))',
-                  backgroundColor: 'rgba(168, 85, 247, 0.1)',
-                },
-              }}
-            >
-              {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
-
-            {/* Language Toggle */}
-            <Box
-              sx={{
-                '& button': {
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    color: '#FFFFFF',
-                    transform: 'scale(1.1)',
-                    filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.6))',
-                    backgroundColor: 'rgba(168, 85, 247, 0.1)',
-                  },
-                },
-              }}
-            >
-              <LanguageToggle />
-            </Box>
-
             {/* Mobile Menu Button */}
             <IconButton
               size="large"
