@@ -8,7 +8,6 @@ import { darkTheme } from '@/lib/theme';
 import { initAnalytics } from '@/lib/analytics';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import PageLoader from '@/components/ui/PageLoader';
 
 interface ProvidersProps {
@@ -48,7 +47,6 @@ export default function Providers({ children }: ProvidersProps) {
         <Header />
         {children}
         <Footer />
-        <WhatsAppButton />
       </MuiThemeProvider>
     </QueryClientProvider>
   );
