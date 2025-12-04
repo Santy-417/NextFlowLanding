@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { contactFormSchema } from '@/lib/validations';
-import type { ContactFormData, ContactFormState, ContactApiResponse } from '@/types/contact.types';
-import { apiClient } from '@/lib/axios';
+import type { ContactFormData, ContactFormState } from '@/types/contact.types';
+import axios from 'axios';
 import { trackEvent } from '@/lib/analytics';
 
 /**
@@ -35,9 +35,15 @@ export const useContactForm = () => {
     });
 
     try {
-      const response = await apiClient.post<ContactApiResponse>('/api/contact', data);
+      // Enviar datos a la API route que actúa como proxy al webhook de n8n
+      const response = await axios.post('/api/contact', data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-      if (response.data.success) {
+      // Verificar respuesta exitosa
+      if (response.data && response.data.success) {
         setFormState({
           isSubmitting: false,
           isSuccess: true,
@@ -59,7 +65,7 @@ export const useContactForm = () => {
           });
         }, 3000);
       } else {
-        throw new Error(response.data.message);
+        throw new Error(response.data?.message || 'Respuesta inesperada del servidor');
       }
     } catch (error) {
       console.error('Error al enviar formulario:', error);
@@ -68,7 +74,7 @@ export const useContactForm = () => {
         isSubmitting: false,
         isSuccess: false,
         isError: true,
-        errorMessage: error instanceof Error ? error.message : 'Error desconocido',
+        errorMessage: error instanceof Error ? error.message : 'Error al enviar el mensaje. Por favor, intenta de nuevo.',
       });
 
       // Resetear estado de error después de 5 segundos
