@@ -9,15 +9,7 @@ interface ThemeToggleProps {
   onToggle: () => void;
 }
 
-export default function ThemeToggle({ isDarkMode, onToggle }: ThemeToggleProps) {
-  // TODO: Implementar toggle de tema
-  // - Icono de sol/luna
-  // - Animación de transición
-  // - Track analytics del cambio de tema
-
-  return (
-    <button onClick={onToggle} aria-label="Toggle theme">
-      {/* Implementar botón aquí */}
-    </button>
-  );
+export default function ThemeToggle({ isDarkMode: _isDarkMode, onToggle: _onToggle }: ThemeToggleProps) {
+  // Solo modo oscuro - no se muestra el toggle
+  return null;
 }

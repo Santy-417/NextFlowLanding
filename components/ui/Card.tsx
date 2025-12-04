@@ -12,14 +12,21 @@ interface CardProps {
  * Card genérico para contenido
  */
 export default function Card({ children, className = '', hoverable = false }: CardProps) {
-  // TODO: Implementar Card
-  // - Fondo con backdrop blur
-  // - Border radius
-  // - Sombra sutil
-  // - Hover effect si hoverable es true (elevación + transform)
+  const hoverClasses = hoverable
+    ? 'hover:shadow-2xl hover:-translate-y-1 transition-all duration-300'
+    : '';
 
   return (
-    <div className={className}>
+    <div
+      className={`
+        bg-white/80 dark:bg-gray-900/80
+        backdrop-blur-sm
+        rounded-xl
+        shadow-lg
+        ${hoverClasses}
+        ${className}
+      `}
+    >
       {children}
     </div>
   );
