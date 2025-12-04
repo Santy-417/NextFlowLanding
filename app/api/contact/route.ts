@@ -1,69 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { contactFormSchema } from '@/lib/validations';
-import { sendContactEmail } from '@/services/email.service';
-import type { ContactApiResponse } from '@/types/contact.types';
 
 /**
  * API Route para manejar el formulario de contacto
  * POST /api/contact
+ * Actúa como proxy para enviar datos al webhook de n8n
+ * Evita problemas de CORS al hacer la petición desde el servidor
  */
 export async function POST(request: NextRequest) {
   try {
-    // Obtener datos del body
+    // Obtener datos del formulario
     const body = await request.json();
 
-    // Validar datos con Zod
-    const validationResult = contactFormSchema.safeParse(body);
+    // URL del webhook de n8n
+    const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ||
+      'https://nextflow-n8n.uywxlm.easypanel.host/webhook/1686c567-b383-481e-a7b4-cd4c10e9e3ce';
 
-    if (!validationResult.success) {
-      return NextResponse.json<ContactApiResponse>(
-        {
-          success: false,
-          message: 'Datos inválidos',
-          error: validationResult.error.errors[0]?.message,
-        },
-        { status: 400 }
-      );
-    }
-
-    const formData = validationResult.data;
-
-    // Verificar variables de entorno necesarias
-    if (
-      !process.env.SMTP_HOST ||
-      !process.env.SMTP_USER ||
-      !process.env.SMTP_PASSWORD ||
-      !process.env.EMAIL_TO
-    ) {
-      console.error('Variables de entorno SMTP no configuradas');
-      return NextResponse.json<ContactApiResponse>(
-        {
-          success: false,
-          message: 'Configuración de email no disponible',
-        },
-        { status: 500 }
-      );
-    }
-
-    // Enviar email
-    await sendContactEmail(formData);
-
-    // Respuesta exitosa
-    return NextResponse.json<ContactApiResponse>(
-      {
-        success: true,
-        message: 'Mensaje enviado exitosamente',
+    // Enviar datos al webhook de n8n (server-to-server, no CORS)
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error('Error en API de contacto:', error);
+      body: JSON.stringify(body),
+    });
 
-    return NextResponse.json<ContactApiResponse>(
+    // Obtener respuesta del webhook
+    const data = await response.json();
+
+    // Verificar si la respuesta fue exitosa
+    if (!response.ok) {
+      return NextResponse.json(
+        { success: false, message: 'Error al procesar el mensaje' },
+        { status: response.status }
+      );
+    }
+
+    // Retornar respuesta exitosa con el mensaje del webhook
+    return NextResponse.json({
+      success: true,
+      message: data.message || 'Mensaje enviado correctamente',
+    });
+  } catch (error) {
+    console.error('Error en API /api/contact:', error);
+
+    return NextResponse.json(
       {
         success: false,
-        message: 'Error al enviar el mensaje',
-        error: error instanceof Error ? error.message : 'Error desconocido',
+        message: error instanceof Error ? error.message : 'Error al enviar el mensaje'
       },
       { status: 500 }
     );

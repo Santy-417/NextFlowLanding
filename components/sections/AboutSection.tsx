@@ -46,7 +46,7 @@ export default function AboutSection() {
       style={{
         position: 'relative',
         width: '100vw',
-        height: '100vh',
+        minHeight: '100vh',
         overflow: 'hidden',
       }}
     >
@@ -124,18 +124,18 @@ export default function AboutSection() {
       {/* Contenedor principal con 3 columnas */}
       <Box
         sx={{
-          height: '100vh',
+          minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
           zIndex: 10,
           overflow: 'hidden',
-          padding: { xs: '40px 20px', md: '60px 40px' },
+          padding: { xs: '60px 20px', md: '60px 40px' },
         }}
       >
-        <Container maxWidth="xl" sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-          <Grid container spacing={0} sx={{ height: '100%', alignItems: 'center' }}>
+        <Container maxWidth="xl" sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+          <Grid container spacing={0} sx={{ width: '100%', alignItems: 'center' }}>
 
             {/* COLUMNA IZQUIERDA - Imagen Santiago */}
             <Grid
@@ -201,7 +201,7 @@ export default function AboutSection() {
                 </motion.div>
 
                 {/* Grid de información de ambos fundadores - más horizontal */}
-                <Grid container spacing={6} sx={{ justifyContent: 'center' }}>
+                <Grid container spacing={{ xs: 8, md: 6 }} sx={{ justifyContent: 'center' }}>
 
                   {/* Info Santiago */}
                   <Grid item xs={12} md={6}>
@@ -210,7 +210,7 @@ export default function AboutSection() {
                         opacity: isVisible ? 1 : 0,
                         transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
                         transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s',
-                        maxWidth: '450px',
+                        maxWidth: { xs: '100%', sm: '500px', md: '450px' },
                         mx: 'auto',
                       }}
                     >
@@ -221,7 +221,7 @@ export default function AboutSection() {
                         alt="Santiago Chavarro"
                         sx={{
                           display: { xs: 'block', md: 'none' },
-                          height: '250px',
+                          height: { xs: '200px', sm: '250px' },
                           width: 'auto',
                           maxWidth: '100%',
                           objectFit: 'contain',
@@ -274,7 +274,7 @@ export default function AboutSection() {
                         opacity: isVisible ? 1 : 0,
                         transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
                         transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-                        maxWidth: '450px',
+                        maxWidth: { xs: '100%', sm: '500px', md: '450px' },
                         mx: 'auto',
                       }}
                     >
@@ -285,7 +285,7 @@ export default function AboutSection() {
                         alt="Samuel Aristizabal"
                         sx={{
                           display: { xs: 'block', md: 'none' },
-                          height: '250px',
+                          height: { xs: '200px', sm: '250px' },
                           width: 'auto',
                           maxWidth: '100%',
                           objectFit: 'contain',

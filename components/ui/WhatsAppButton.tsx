@@ -6,7 +6,7 @@ import { trackEvent } from '@/lib/analytics';
  * Botón flotante de WhatsApp (sticky)
  */
 export default function WhatsAppButton() {
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || '3003214043';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || '3159138270';
   const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   const handleClick = () => {
