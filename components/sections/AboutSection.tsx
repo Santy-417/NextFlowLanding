@@ -155,20 +155,29 @@ export default function AboutSection() {
                 animate={{ opacity: isVisible ? 1 : 0, x: isVisible ? 0 : -50 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                <Box
-                  component="img"
-                  src="/images/FotoSantiago.png"
-                  alt="Santiago Chavarro"
-                  sx={{
-                    height: { md: '380px', lg: '400px' },
-                    width: 'auto',
-                    objectFit: 'contain',
-                    transition: 'all 0.4s ease',
-                    '&:hover': {
-                      transform: 'translateY(-15px)',
-                    },
-                  }}
-                />
+                <Box sx={{ position: 'relative' }}>
+                  {/* Glow behind Santiago */}
+                  <Box sx={{
+                    position: 'absolute', width: '200px', height: '300px',
+                    background: 'radial-gradient(ellipse, rgba(232,121,249,0.15) 0%, transparent 70%)',
+                    bottom: 0, left: '50%', transform: 'translateX(-50%)',
+                    zIndex: -1, filter: 'blur(30px)', pointerEvents: 'none',
+                  }} />
+                  <Box
+                    component="img"
+                    src="/images/FotoSantiago.png"
+                    alt="Santiago Chavarro"
+                    sx={{
+                      height: { md: '380px', lg: '400px' },
+                      width: 'auto',
+                      objectFit: 'contain',
+                      transition: 'all 0.4s ease',
+                      '&:hover': {
+                        transform: 'translateY(-15px)',
+                      },
+                    }}
+                  />
+                </Box>
               </motion.div>
             </Grid>
 
@@ -176,7 +185,17 @@ export default function AboutSection() {
             <Grid item xs={12} md={7}>
               <Box sx={{ textAlign: 'center', px: { xs: 2, md: 3 } }}>
 
-                {/* Título - estilo del código compartido */}
+                {/* Eyebrow label */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 2 }}>
+                  <Box sx={{ width: '24px', height: '1px', background: 'rgba(139,92,246,0.4)' }} />
+                  <Typography sx={{
+                    fontSize: '11px', letterSpacing: '0.2em', color: 'rgba(139,92,246,0.9)',
+                    textTransform: 'uppercase', fontWeight: 600,
+                  }}>Los Fundadores</Typography>
+                  <Box sx={{ width: '24px', height: '1px', background: 'rgba(139,92,246,0.4)' }} />
+                </Box>
+
+                {/* Headline */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -186,32 +205,51 @@ export default function AboutSection() {
                   <Typography
                     variant="h2"
                     sx={{
-                      fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem', lg: '4rem' },
+                      fontSize: 'clamp(2rem, 4vw, 3.5rem)',
                       fontWeight: 700,
                       textAlign: 'center',
-                      mb: { xs: 6, md: 8 },
+                      mb: 4,
                       background: 'linear-gradient(to bottom, #FFFFFF, rgba(255, 255, 255, 0.6))',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       backgroundClip: 'text',
                     }}
                   >
-                    Nuestro Equipo
+                    Las mentes detrás de NextFlow
                   </Typography>
                 </motion.div>
 
+                {/* Subtítulo */}
+                <Typography sx={{
+                  fontSize: 'clamp(0.875rem, 1.2vw, 1rem)',
+                  color: 'rgba(209,213,219,0.7)',
+                  textAlign: 'center',
+                  mb: 6,
+                }}>
+                  Dos ingenieros que convirtieron su obsesión por la tecnología en una agencia.
+                </Typography>
+
                 {/* Grid de información de ambos fundadores - más horizontal */}
-                <Grid container spacing={6} sx={{ justifyContent: 'center' }}>
+                <Grid container spacing={4} sx={{ justifyContent: 'center' }}>
 
                   {/* Info Santiago */}
                   <Grid item xs={12} md={6}>
                     <Box
                       sx={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(139,92,246,0.15)',
+                        borderRadius: '16px',
+                        padding: '28px',
+                        backdropFilter: 'blur(8px)',
                         opacity: isVisible ? 1 : 0,
                         transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
                         transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s',
                         maxWidth: '450px',
                         mx: 'auto',
+                        '&:hover': {
+                          borderColor: 'rgba(139,92,246,0.4)',
+                          boxShadow: '0 0 30px rgba(139,92,246,0.08)',
+                        },
                       }}
                     >
                       {/* Imagen en mobile */}
@@ -229,6 +267,20 @@ export default function AboutSection() {
                           mb: 3,
                         }}
                       />
+
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
+                        transition={{ duration: 0.4, delay: 0.3 }}
+                      >
+                        <Box component="span" sx={{
+                          display: 'inline-block', mb: 1,
+                          background: 'rgba(232,121,249,0.1)', color: '#E879F9',
+                          fontSize: '10px', padding: '3px 10px', borderRadius: '20px',
+                          border: '1px solid rgba(232,121,249,0.3)', letterSpacing: '0.1em',
+                          textTransform: 'uppercase', fontWeight: 600,
+                        }}>CO-FUNDADOR</Box>
+                      </motion.div>
 
                       <Typography
                         variant="h4"
@@ -262,20 +314,37 @@ export default function AboutSection() {
                           textAlign: 'justify',
                         }}
                       >
-                        Santiago es un desarrollador que piensa primero en la arquitectura y después en el código, lo cual ya lo pone por encima del promedio de &quot;programadores&quot; que solo saben copiar soluciones de internet. Su enfoque está en crear aplicaciones web y móviles que funcionen bien bajo presión: limpias, mantenibles y escalables.
+                        Santiago diseña sistemas antes de escribir una línea de código. Su enfoque en arquitectura limpia y escalable convierte ideas complejas en productos que funcionan bajo presión — y que el equipo puede mantener sin morir en el intento.
                       </Typography>
                     </Box>
+                  </Grid>
+
+                  {/* Separador vertical */}
+                  <Grid item sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', px: 0 }}>
+                    <Box sx={{
+                      width: '1px', height: '60%', alignSelf: 'center',
+                      background: 'linear-gradient(to bottom, transparent, rgba(139,92,246,0.3), transparent)',
+                    }} />
                   </Grid>
 
                   {/* Info Samuel */}
                   <Grid item xs={12} md={6}>
                     <Box
                       sx={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(139,92,246,0.15)',
+                        borderRadius: '16px',
+                        padding: '28px',
+                        backdropFilter: 'blur(8px)',
                         opacity: isVisible ? 1 : 0,
                         transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
                         transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
                         maxWidth: '450px',
                         mx: 'auto',
+                        '&:hover': {
+                          borderColor: 'rgba(139,92,246,0.4)',
+                          boxShadow: '0 0 30px rgba(139,92,246,0.08)',
+                        },
                       }}
                     >
                       {/* Imagen en mobile */}
@@ -293,6 +362,20 @@ export default function AboutSection() {
                           mb: 3,
                         }}
                       />
+
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
+                        transition={{ duration: 0.4, delay: 0.3 }}
+                      >
+                        <Box component="span" sx={{
+                          display: 'inline-block', mb: 1,
+                          background: 'rgba(6,182,212,0.1)', color: '#06B6D4',
+                          fontSize: '10px', padding: '3px 10px', borderRadius: '20px',
+                          border: '1px solid rgba(6,182,212,0.3)', letterSpacing: '0.1em',
+                          textTransform: 'uppercase', fontWeight: 600,
+                        }}>CO-FUNDADOR</Box>
+                      </motion.div>
 
                       <Typography
                         variant="h4"
@@ -326,7 +409,7 @@ export default function AboutSection() {
                           textAlign: 'justify',
                         }}
                       >
-                        Samuel es un ingeniero de software orientado a resultados, alguien que no pierde tiempo en features innecesarias y prioriza lo que mueve la aguja. Destaca por su capacidad para integrar tecnologías modernas y convertir requerimientos difusos en sistemas estables y bien diseñados.
+                        Samuel convierte requerimientos difusos en sistemas estables. Desde automatizaciones en n8n hasta plataformas full-stack, su prioridad es siempre la misma: que lo que se construya funcione, escale y genere resultados reales.
                       </Typography>
                     </Box>
                   </Grid>
@@ -353,20 +436,29 @@ export default function AboutSection() {
                 animate={{ opacity: isVisible ? 1 : 0, x: isVisible ? 0 : 50 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                <Box
-                  component="img"
-                  src="/images/FotoSamuFull.png"
-                  alt="Samuel Aristizabal"
-                  sx={{
-                    height: { md: '380px', lg: '400px' },
-                    width: 'auto',
-                    objectFit: 'contain',
-                    transition: 'all 0.4s ease',
-                    '&:hover': {
-                      transform: 'translateY(-15px)',
-                    },
-                  }}
-                />
+                <Box sx={{ position: 'relative' }}>
+                  {/* Glow behind Samuel */}
+                  <Box sx={{
+                    position: 'absolute', width: '200px', height: '300px',
+                    background: 'radial-gradient(ellipse, rgba(6,182,212,0.15) 0%, transparent 70%)',
+                    bottom: 0, left: '50%', transform: 'translateX(-50%)',
+                    zIndex: -1, filter: 'blur(30px)', pointerEvents: 'none',
+                  }} />
+                  <Box
+                    component="img"
+                    src="/images/FotoSamuFull.png"
+                    alt="Samuel Aristizabal"
+                    sx={{
+                      height: { md: '380px', lg: '400px' },
+                      width: 'auto',
+                      objectFit: 'contain',
+                      transition: 'all 0.4s ease',
+                      '&:hover': {
+                        transform: 'translateY(-15px)',
+                      },
+                    }}
+                  />
+                </Box>
               </motion.div>
             </Grid>
 
