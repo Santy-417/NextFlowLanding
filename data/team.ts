@@ -10,8 +10,8 @@ export const teamMembers: TeamMember[] = [
     id: 'santiago-chavarro',
     name: 'Santiago Chavarro',
     role: 'Co-fundador & CEO',
-    description: 'Experto en desarrollo de software y automatizaciones con IA.',
-    image: '/images/team/santiago.jpg',
+    description: 'Santiago diseña sistemas antes de escribir una línea de código. Su enfoque en arquitectura limpia y escalable convierte ideas complejas en productos que funcionan bajo presión — y que el equipo puede mantener sin morir en el intento.',
+    image: '/images/FotoSantiago.png',
     linkedin: '', // Agregar URL de LinkedIn
     github: '',   // Agregar URL de GitHub
     isFounder: true,
@@ -21,8 +21,8 @@ export const teamMembers: TeamMember[] = [
     id: 'samuel-aristizabal',
     name: 'Samuel Aristizabal',
     role: 'Co-fundador & CTO',
-    description: 'Especialista en arquitectura de software y soluciones tecnológicas.',
-    image: '/images/team/samuel.jpg',
+    description: 'Samuel convierte requerimientos difusos en sistemas estables. Desde automatizaciones en n8n hasta plataformas full-stack, su prioridad es siempre la misma: que lo que se construya funcione, escale y genere resultados reales.',
+    image: '/images/FotoSamuFull.png',
     linkedin: '', // Agregar URL de LinkedIn
     github: '',   // Agregar URL de GitHub
     isFounder: true,

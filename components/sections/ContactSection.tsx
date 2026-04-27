@@ -1,324 +1,275 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Box, Container, Typography, TextField, Button, Grid, Alert } from '@mui/material';
 import { WhatsApp, Email, Instagram, Send } from '@mui/icons-material';
 import { useContactForm } from '@/hooks/useContactForm';
 
-/**
- * Contact Section - Sección de contacto
- * Formulario de contacto e información
- */
+const inputSx = {
+  '& .MuiOutlinedInput-root': {
+    color: '#FFFFFF',
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
+    '&:hover fieldset': { borderColor: 'rgba(139,92,246,0.6)' },
+    '&.Mui-focused fieldset': { borderColor: '#A855F7' },
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderRadius: '10px',
+  },
+  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+  '& .MuiInputLabel-root.Mui-focused': { color: '#A855F7' },
+};
+
+const contactLinks = [
+  {
+    href: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP}`,
+    icon: WhatsApp,
+    iconColor: '#25D366',
+    hoverBorder: '#25D366',
+    hoverGlow: 'rgba(37,211,102,0.15)',
+    label: 'WhatsApp',
+    detail: process.env.NEXT_PUBLIC_WHATSAPP ?? '3003214043',
+    external: true,
+  },
+  {
+    href: 'mailto:contacto@nextflow.com',
+    icon: Email,
+    iconColor: '#A855F7',
+    hoverBorder: '#A855F7',
+    hoverGlow: 'rgba(168,85,247,0.15)',
+    label: 'Email',
+    detail: 'contacto@nextflow.com',
+    external: false,
+  },
+  {
+    href: process.env.NEXT_PUBLIC_INSTAGRAM ?? 'https://instagram.com/nextflowai_',
+    icon: Instagram,
+    iconColor: '#E879F9',
+    hoverBorder: '#E879F9',
+    hoverGlow: 'rgba(232,121,249,0.15)',
+    label: 'Instagram',
+    detail: '@nextflowai_',
+    external: true,
+  },
+];
 
 export default function ContactSection() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
   const { register, handleSubmit, errors, formState } = useContactForm();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.2,
-        rootMargin: '0px',
-      }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
 
   return (
     <section
       id="contact"
-      ref={sectionRef}
       style={{
         position: 'relative',
-        width: '100vw',
+        width: '100%',
         minHeight: '100vh',
-        background: '#000000',
+        background: '#09090f',
         paddingTop: '100px',
         paddingBottom: '100px',
       }}
     >
-      {/* Difuminado inferior para transición suave al footer */}
+      {/* Fondo radial sutil */}
       <Box
+        aria-hidden="true"
         sx={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '30%',
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 1) 100%)',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 60% 50% at 50% 100%, rgba(192,38,211,0.08) 0%, transparent 60%)',
           pointerEvents: 'none',
-          zIndex: 1,
+          zIndex: 0,
         }}
       />
 
-      <Container maxWidth="lg">
-        {/* Título */}
-        <Box
-          sx={{
-            textAlign: 'center',
-            mb: 8,
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        {/* Encabezado */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         >
-          <Typography
-            variant="h2"
-            sx={{
-              background: 'linear-gradient(90deg, #C026D3 0%, #E879F9 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              fontWeight: 700,
-              mb: 2,
-              fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' },
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Hablemos de tu proyecto
-          </Typography>
-          <Typography
-            sx={{
-              color: '#D1D5DB',
-              fontSize: { xs: '1rem', md: '1.1rem' },
-              maxWidth: '600px',
-              mx: 'auto',
-              lineHeight: 1.8,
-            }}
-          >
-            Cuéntanos qué necesitas y te responderemos en menos de 24 horas.
-          </Typography>
-        </Box>
+          <Box sx={{ textAlign: 'center', mb: 8 }}>
+            {/* Eyebrow */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1.5,
+                mb: 1.5,
+              }}
+            >
+              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
+              <Typography
+                sx={{
+                  fontSize: '11px',
+                  letterSpacing: '0.2em',
+                  color: 'rgba(139,92,246,0.8)',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                }}
+              >
+                CONTÁCTANOS
+              </Typography>
+              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
+            </Box>
+
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+                fontWeight: 700,
+                background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.65) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                mb: 2,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Hablemos de tu proyecto
+            </Typography>
+
+            <Typography
+              sx={{
+                color: 'rgba(209,213,219,0.65)',
+                fontSize: 'clamp(0.875rem, 1.2vw, 1rem)',
+                maxWidth: '520px',
+                mx: 'auto',
+                lineHeight: 1.7,
+              }}
+            >
+              Cuéntanos qué necesitas y te responderemos en menos de 24 horas.
+            </Typography>
+          </Box>
+        </motion.div>
 
         <Grid container spacing={6}>
           {/* Formulario */}
           <Grid item xs={12} md={7}>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              sx={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
-                transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s',
-              }}
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, delay: 0.15 }}
             >
-              <Grid container spacing={3}>
-                {/* Nombre */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    {...register('name')}
-                    label="Nombre *"
-                    fullWidth
-                    error={!!errors.name}
-                    helperText={errors.name?.message}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        color: '#FFFFFF',
-                        '& fieldset': {
-                          borderColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: '#9CA3AF',
-                      },
-                    }}
-                  />
-                </Grid>
-
-                {/* Email */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    {...register('email')}
-                    label="Email *"
-                    type="email"
-                    fullWidth
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        color: '#FFFFFF',
-                        '& fieldset': {
-                          borderColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: '#9CA3AF',
-                      },
-                    }}
-                  />
-                </Grid>
-
-                {/* Teléfono */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    {...register('phone')}
-                    label="Teléfono"
-                    fullWidth
-                    error={!!errors.phone}
-                    helperText={errors.phone?.message}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        color: '#FFFFFF',
-                        '& fieldset': {
-                          borderColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: '#9CA3AF',
-                      },
-                    }}
-                  />
-                </Grid>
-
-                {/* Empresa */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    {...register('company')}
-                    label="Empresa"
-                    fullWidth
-                    error={!!errors.company}
-                    helperText={errors.company?.message}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        color: '#FFFFFF',
-                        '& fieldset': {
-                          borderColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: '#9CA3AF',
-                      },
-                    }}
-                  />
-                </Grid>
-
-                {/* Mensaje */}
-                <Grid item xs={12}>
-                  <TextField
-                    {...register('message')}
-                    label="Mensaje *"
-                    multiline
-                    rows={5}
-                    fullWidth
-                    error={!!errors.message}
-                    helperText={errors.message?.message}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        color: '#FFFFFF',
-                        '& fieldset': {
-                          borderColor: 'rgba(255, 255, 255, 0.1)',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#A855F7',
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: '#9CA3AF',
-                      },
-                    }}
-                  />
-                </Grid>
-
-                {/* Botón */}
-                <Grid item xs={12}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    disabled={formState.isSubmitting}
-                    startIcon={<Send />}
-                    sx={{
-                      background: 'linear-gradient(135deg, #A855F7 0%, #E879F9 100%)',
-                      color: '#FFFFFF',
-                      py: 2,
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      borderRadius: '12px',
-                      textTransform: 'none',
-                      boxShadow: '0 10px 30px rgba(168, 85, 247, 0.3)',
-                      '&:hover': {
-                        background: 'linear-gradient(135deg, #C026D3 0%, #A855F7 100%)',
-                        boxShadow: '0 15px 40px rgba(168, 85, 247, 0.5)',
-                      },
-                      '&:disabled': {
-                        background: 'rgba(255, 255, 255, 0.1)',
-                        color: 'rgba(255, 255, 255, 0.3)',
-                      },
-                    }}
-                  >
-                    {formState.isSubmitting ? 'Enviando...' : 'Enviar mensaje'}
-                  </Button>
-                </Grid>
-
-                {/* Alertas */}
-                {formState.isSuccess && (
-                  <Grid item xs={12}>
-                    <Alert severity="success">¡Mensaje enviado! Te responderemos pronto.</Alert>
+              <Box component="form" onSubmit={handleSubmit}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      {...register('name')}
+                      label="Nombre *"
+                      fullWidth
+                      error={!!errors.name}
+                      helperText={errors.name?.message}
+                      sx={inputSx}
+                    />
                   </Grid>
-                )}
 
-                {formState.isError && (
-                  <Grid item xs={12}>
-                    <Alert severity="error">
-                      {formState.errorMessage || 'Error al enviar. Intenta de nuevo.'}
-                    </Alert>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      {...register('email')}
+                      label="Email *"
+                      type="email"
+                      fullWidth
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                      sx={inputSx}
+                    />
                   </Grid>
-                )}
-              </Grid>
-            </Box>
+
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      {...register('phone')}
+                      label="Teléfono"
+                      fullWidth
+                      error={!!errors.phone}
+                      helperText={errors.phone?.message}
+                      sx={inputSx}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      {...register('company')}
+                      label="Empresa"
+                      fullWidth
+                      error={!!errors.company}
+                      helperText={errors.company?.message}
+                      sx={inputSx}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      {...register('message')}
+                      label="Mensaje *"
+                      multiline
+                      rows={5}
+                      fullWidth
+                      error={!!errors.message}
+                      helperText={errors.message?.message}
+                      sx={inputSx}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="large"
+                      fullWidth
+                      disabled={formState.isSubmitting}
+                      startIcon={<Send />}
+                      sx={{
+                        background: 'linear-gradient(135deg, #A855F7 0%, #E879F9 100%)',
+                        color: '#FFFFFF',
+                        py: 1.75,
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        borderRadius: '12px',
+                        textTransform: 'none',
+                        boxShadow: '0 8px 24px rgba(168,85,247,0.3)',
+                        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #C026D3 0%, #A855F7 100%)',
+                          boxShadow: '0 12px 32px rgba(168,85,247,0.45)',
+                          transform: 'translateY(-2px)',
+                        },
+                        '&:disabled': {
+                          background: 'rgba(255,255,255,0.08)',
+                          color: 'rgba(255,255,255,0.3)',
+                        },
+                      }}
+                    >
+                      {formState.isSubmitting ? 'Enviando...' : 'Enviar mensaje'}
+                    </Button>
+                  </Grid>
+
+                  {formState.isSuccess && (
+                    <Grid item xs={12}>
+                      <Alert severity="success">¡Mensaje enviado! Te responderemos pronto.</Alert>
+                    </Grid>
+                  )}
+
+                  {formState.isError && (
+                    <Grid item xs={12}>
+                      <Alert severity="error">
+                        {formState.errorMessage || 'Error al enviar. Intenta de nuevo.'}
+                      </Alert>
+                    </Grid>
+                  )}
+                </Grid>
+              </Box>
+            </motion.div>
           </Grid>
 
           {/* Información de contacto */}
           <Grid item xs={12} md={5}>
-            <Box
-              sx={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
-                transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-              }}
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, delay: 0.25 }}
             >
               <Typography
                 variant="h5"
@@ -326,100 +277,60 @@ export default function ContactSection() {
                   color: '#FFFFFF',
                   fontWeight: 600,
                   mb: 4,
-                  fontSize: '1.5rem',
+                  fontSize: '1.25rem',
                 }}
               >
                 Otras formas de contacto
               </Typography>
 
-              {/* WhatsApp */}
-              <Box
-                component="a"
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  p: 3,
-                  mb: 2,
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                  borderRadius: '12px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    borderColor: '#25D366',
-                    boxShadow: '0 10px 30px rgba(37, 211, 102, 0.2)',
-                  },
-                }}
-              >
-                <WhatsApp sx={{ color: '#25D366', fontSize: '32px', mr: 2 }} />
-                <Box>
-                  <Typography sx={{ color: '#FFFFFF', fontWeight: 600, mb: 0.5 }}>WhatsApp</Typography>
-                  <Typography sx={{ color: '#9CA3AF', fontSize: '0.9rem' }}>
-                    {process.env.NEXT_PUBLIC_WHATSAPP}
-                  </Typography>
+              {contactLinks.map(({ href, icon: Icon, iconColor, hoverBorder, hoverGlow, label, detail, external }) => (
+                <Box
+                  key={label}
+                  component="a"
+                  href={href}
+                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    p: 2.5,
+                    mb: 2,
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.09)',
+                    borderRadius: '12px',
+                    textDecoration: 'none',
+                    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                    '&:hover': {
+                      borderColor: hoverBorder,
+                      boxShadow: `0 8px 24px ${hoverGlow}`,
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: '44px',
+                      height: '44px',
+                      borderRadius: '10px',
+                      background: 'rgba(255,255,255,0.05)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mr: 2,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon sx={{ color: iconColor, fontSize: '22px' }} />
+                  </Box>
+                  <Box>
+                    <Typography sx={{ color: '#FFFFFF', fontWeight: 600, fontSize: '0.9rem', mb: 0.25 }}>
+                      {label}
+                    </Typography>
+                    <Typography sx={{ color: '#9CA3AF', fontSize: '0.825rem' }}>
+                      {detail}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-
-              {/* Email */}
-              <Box
-                component="a"
-                href="mailto:contacto@nextflow.com"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  p: 3,
-                  mb: 2,
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                  borderRadius: '12px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    borderColor: '#A855F7',
-                    boxShadow: '0 10px 30px rgba(168, 85, 247, 0.2)',
-                  },
-                }}
-              >
-                <Email sx={{ color: '#A855F7', fontSize: '32px', mr: 2 }} />
-                <Box>
-                  <Typography sx={{ color: '#FFFFFF', fontWeight: 600, mb: 0.5 }}>Email</Typography>
-                  <Typography sx={{ color: '#9CA3AF', fontSize: '0.9rem' }}>
-                    contacto@nextflow.com
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Instagram */}
-              <Box
-                component="a"
-                href={process.env.NEXT_PUBLIC_INSTAGRAM}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  p: 3,
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                  borderRadius: '12px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    borderColor: '#E879F9',
-                    boxShadow: '0 10px 30px rgba(232, 121, 249, 0.2)',
-                  },
-                }}
-              >
-                <Instagram sx={{ color: '#E879F9', fontSize: '32px', mr: 2 }} />
-                <Box>
-                  <Typography sx={{ color: '#FFFFFF', fontWeight: 600, mb: 0.5 }}>Instagram</Typography>
-                  <Typography sx={{ color: '#9CA3AF', fontSize: '0.9rem' }}>@nextflowai_</Typography>
-                </Box>
-              </Box>
-            </Box>
+              ))}
+            </motion.div>
           </Grid>
         </Grid>
       </Container>

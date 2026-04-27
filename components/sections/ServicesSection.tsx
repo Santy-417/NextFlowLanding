@@ -1,213 +1,232 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import type { ElementType } from 'react';
+import { motion } from 'framer-motion';
 import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
 import * as Icons from '@mui/icons-material';
 import { getAllServices } from '@/data/services';
 
-/**
- * Services Section - Sección de servicios
- * Muestra todos los servicios en grid con iconos y animaciones
- */
-
 export default function ServicesSection() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
   const services = getAllServices();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.2,
-        rootMargin: '0px',
-      }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
 
   return (
     <section
       id="services"
-      ref={sectionRef}
       style={{
         position: 'relative',
-        width: '100vw',
+        width: '100%',
         minHeight: '100vh',
-        background: '#000000',
+        background: '#09090f',
         paddingTop: '100px',
         paddingBottom: '100px',
       }}
     >
-      {/* Difuminado inferior para transición suave a siguiente sección */}
+      {/* Fondo radial sutil */}
       <Box
+        aria-hidden="true"
         sx={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '30%',
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 1) 100%)',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(139,92,246,0.1) 0%, transparent 60%)',
           pointerEvents: 'none',
-          zIndex: 1,
+          zIndex: 0,
         }}
       />
 
-      <Container maxWidth="lg">
-        {/* Título de la sección */}
-        <Box
-          sx={{
-            textAlign: 'center',
-            mb: 8,
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        {/* Encabezado */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         >
-          <Typography
-            variant="h2"
-            sx={{
-              background: 'linear-gradient(90deg, #A855F7 0%, #E879F9 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              fontWeight: 700,
-              mb: 2,
-              fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' },
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Nuestros Servicios
-          </Typography>
-          <Typography
-            sx={{
-              color: '#D1D5DB',
-              fontSize: { xs: '1rem', md: '1.1rem' },
-              maxWidth: '700px',
-              mx: 'auto',
-              lineHeight: 1.8,
-            }}
-          >
-            Transformamos procesos manuales en flujos automáticos con tecnología de punta.
-            Desde desarrollo web hasta automatizaciones con IA.
-          </Typography>
-        </Box>
+          <Box sx={{ textAlign: 'center', mb: 8 }}>
+            {/* Eyebrow */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1.5,
+                mb: 1.5,
+              }}
+            >
+              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
+              <Typography
+                sx={{
+                  fontSize: '11px',
+                  letterSpacing: '0.2em',
+                  color: 'rgba(139,92,246,0.8)',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                }}
+              >
+                NUESTROS SERVICIOS
+              </Typography>
+              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
+            </Box>
+
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+                fontWeight: 700,
+                background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.65) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                mb: 2,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Nuestros Servicios
+            </Typography>
+
+            <Typography
+              sx={{
+                color: 'rgba(209,213,219,0.65)',
+                fontSize: 'clamp(0.875rem, 1.2vw, 1rem)',
+                maxWidth: '600px',
+                mx: 'auto',
+                lineHeight: 1.7,
+              }}
+            >
+              Transformamos procesos manuales en flujos automáticos con tecnología de punta.
+              Desde desarrollo web hasta automatizaciones con IA.
+            </Typography>
+          </Box>
+        </motion.div>
 
         {/* Grid de servicios */}
-        <Grid container spacing={4}>
+        <Grid container spacing={3}>
           {services.map((service, index) => {
-            // Obtener el icono de Material UI dinámicamente
-            const IconComponent = (Icons as any)[service.icon] || Icons.Code;
+            const IconComponent = (Icons as Record<string, ElementType>)[service.icon] || Icons.Code;
 
             return (
               <Grid item xs={12} sm={6} md={4} key={service.id}>
-                <Card
-                  sx={{
-                    background: service.highlighted
-                      ? 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%)'
-                      : 'rgba(255, 255, 255, 0.02)',
-                    backdropFilter: 'blur(10px)',
-                    border: service.highlighted
-                      ? '1px solid rgba(168, 85, 247, 0.3)'
-                      : '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '16px',
-                    height: '100%',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    opacity: isVisible ? 1 : 0,
-                    transform: isVisible ? 'scale(1)' : 'scale(0.9)',
-                    transitionDelay: `${index * 0.1}s`,
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      boxShadow: service.highlighted
-                        ? '0 20px 60px rgba(168, 85, 247, 0.4)'
-                        : '0 20px 60px rgba(255, 255, 255, 0.1)',
-                      borderColor: service.highlighted
-                        ? 'rgba(168, 85, 247, 0.5)'
-                        : 'rgba(255, 255, 255, 0.2)',
-                    },
-                  }}
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.55, delay: index * 0.08 }}
+                  style={{ height: '100%' }}
                 >
-                  <CardContent sx={{ p: 4 }}>
-                    {/* Icono */}
-                    <Box
-                      sx={{
-                        width: '60px',
-                        height: '60px',
-                        borderRadius: '12px',
-                        background: service.highlighted
-                          ? 'linear-gradient(135deg, #A855F7 0%, #E879F9 100%)'
-                          : 'rgba(255, 255, 255, 0.05)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        mb: 3,
-                      }}
-                    >
-                      <IconComponent
+                  <Card
+                    sx={{
+                      background: service.highlighted
+                        ? 'linear-gradient(135deg, rgba(168,85,247,0.12) 0%, rgba(236,72,153,0.08) 100%)'
+                        : 'rgba(255,255,255,0.03)',
+                      backdropFilter: 'blur(8px)',
+                      border: service.highlighted
+                        ? '1px solid rgba(168,85,247,0.3)'
+                        : '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: '16px',
+                      height: '100%',
+                      transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+                      '&:hover': {
+                        transform: 'translateY(-6px)',
+                        boxShadow: service.highlighted
+                          ? '0 20px 50px rgba(168,85,247,0.3)'
+                          : '0 20px 50px rgba(0,0,0,0.4)',
+                        borderColor: service.highlighted
+                          ? 'rgba(168,85,247,0.5)'
+                          : 'rgba(255,255,255,0.15)',
+                      },
+                    }}
+                  >
+                    <CardContent sx={{ p: 4 }}>
+                      {/* Icono */}
+                      <Box
                         sx={{
-                          fontSize: '32px',
-                          color: service.highlighted ? '#FFFFFF' : '#A855F7',
+                          width: '52px',
+                          height: '52px',
+                          borderRadius: '12px',
+                          background: service.highlighted
+                            ? 'linear-gradient(135deg, #A855F7 0%, #E879F9 100%)'
+                            : 'rgba(139,92,246,0.12)',
+                          border: service.highlighted
+                            ? 'none'
+                            : '1px solid rgba(139,92,246,0.2)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          mb: 3,
                         }}
-                      />
-                    </Box>
-
-                    {/* Título */}
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        color: '#FFFFFF',
-                        fontWeight: 600,
-                        mb: 2,
-                        fontSize: '1.25rem',
-                      }}
-                    >
-                      {service.title}
-                    </Typography>
-
-                    {/* Descripción */}
-                    <Typography
-                      sx={{
-                        color: '#D1D5DB',
-                        mb: 3,
-                        fontSize: '0.95rem',
-                        lineHeight: 1.7,
-                      }}
-                    >
-                      {service.description}
-                    </Typography>
-
-                    {/* Features */}
-                    <Box component="ul" sx={{ pl: 2, m: 0 }}>
-                      {service.features.map((feature, idx) => (
-                        <Typography
-                          component="li"
-                          key={idx}
+                      >
+                        <IconComponent
                           sx={{
-                            color: '#9CA3AF',
-                            fontSize: '0.9rem',
-                            mb: 1,
-                            lineHeight: 1.6,
+                            fontSize: '28px',
+                            color: service.highlighted ? '#FFFFFF' : '#A855F7',
                           }}
-                        >
-                          {feature}
-                        </Typography>
-                      ))}
-                    </Box>
-                  </CardContent>
-                </Card>
+                        />
+                      </Box>
+
+                      {/* Título */}
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          color: '#FFFFFF',
+                          fontWeight: 600,
+                          mb: 1.5,
+                          fontSize: '1.1rem',
+                          lineHeight: 1.3,
+                        }}
+                      >
+                        {service.title}
+                      </Typography>
+
+                      {/* Descripción */}
+                      <Typography
+                        sx={{
+                          color: 'rgba(209,213,219,0.7)',
+                          mb: 3,
+                          fontSize: '0.875rem',
+                          lineHeight: 1.7,
+                        }}
+                      >
+                        {service.description}
+                      </Typography>
+
+                      {/* Features */}
+                      <Box component="ul" sx={{ pl: 0, m: 0, listStyle: 'none' }}>
+                        {service.features.map((feature, idx) => (
+                          <Box
+                            component="li"
+                            key={idx}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              gap: 1,
+                              mb: 0.75,
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                width: '4px',
+                                height: '4px',
+                                borderRadius: '50%',
+                                bgcolor: service.highlighted ? '#E879F9' : 'rgba(139,92,246,0.7)',
+                                mt: '8px',
+                                flexShrink: 0,
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                color: 'rgba(156,163,175,0.85)',
+                                fontSize: '0.825rem',
+                                lineHeight: 1.6,
+                              }}
+                            >
+                              {feature}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </Grid>
             );
           })}

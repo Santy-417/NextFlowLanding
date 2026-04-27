@@ -1,469 +1,318 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Box, Container, Grid, Typography } from '@mui/material';
-import WireframeBackground from '@/components/ui/WireframeBackground';
-import FloatingParticles from '@/components/ui/FloatingParticles';
 
-/**
- * About Section - Sección del equipo rediseñada con efectos modernos 3D
- * Incluye: Grid wireframe 3D, partículas flotantes, orbs de luz, animaciones mejoradas
- */
+const FOUNDERS = [
+  {
+    name: 'Santiago Chavarro',
+    role: 'Co-fundador & CEO',
+    badge: 'CO-FUNDADOR',
+    description:
+      'Santiago diseña sistemas antes de escribir una línea de código. Su enfoque en arquitectura limpia y escalable convierte ideas complejas en productos que funcionan bajo presión.',
+    image: '/images/FotoSantiago.png',
+    accent: '#E879F9',
+    glowColor: 'rgba(232,121,249,0.22)',
+    glowColor2: 'rgba(168,85,247,0.1)',
+    badgeBg: 'rgba(232,121,249,0.08)',
+    badgeBorder: 'rgba(232,121,249,0.22)',
+    separatorFrom: '#E879F9',
+    photoSide: 'left' as const,
+    animX: -40,
+    delay: 0.1,
+  },
+  {
+    name: 'Samuel Aristizabal',
+    role: 'Co-fundador & CTO',
+    badge: 'CO-FUNDADOR',
+    description:
+      'Samuel convierte requerimientos difusos en sistemas estables. Desde automatizaciones en n8n hasta plataformas full-stack, siempre prioriza lo que mueve la aguja.',
+    image: '/images/FotoSamuFull.png',
+    accent: '#06B6D4',
+    glowColor: 'rgba(6,182,212,0.22)',
+    glowColor2: 'rgba(6,182,212,0.08)',
+    badgeBg: 'rgba(6,182,212,0.08)',
+    badgeBorder: 'rgba(6,182,212,0.22)',
+    separatorFrom: '#06B6D4',
+    photoSide: 'right' as const,
+    animX: 40,
+    delay: 0.22,
+  },
+] as const;
 
 export default function AboutSection() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.2,
-        rootMargin: '0px',
-      }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
   return (
     <section
       id="about-section"
-      ref={sectionRef}
-      style={{
-        position: 'relative',
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
-      }}
+      style={{ position: 'relative', overflow: 'hidden', background: '#0a0a0f' }}
     >
-      {/* Fondo más negro - expandido */}
+      {/* Fondo radial */}
       <Box
+        aria-hidden="true"
         sx={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '120%', // Expandido
-          background: '#000000',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 80% 55% at 50% 100%, rgba(139,92,246,0.1) 0%, rgba(139,92,246,0.04) 45%, transparent 70%)',
+          pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      {/* Gradiente de transición desde HeroSection - expandido */}
+      {/* Wrapper principal — 100vh en desktop, auto en mobile */}
       <Box
         sx={{
-          position: 'absolute',
-          top: 0,
-          left: '-10%', // Expandido horizontalmente
-          right: '-10%',
-          height: '50%', // Más alto
-          background: 'linear-gradient(to bottom, rgba(60, 30, 100, 0.3) 0%, rgba(30, 15, 60, 0.2) 30%, rgba(15, 10, 30, 0.1) 60%, transparent 100%)',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      />
-
-      {/* Gradiente radial morado central - expandido */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '-20%', // Expandido verticalmente
-          left: '-20%', // Expandido horizontalmente
-          right: '-20%',
-          bottom: '-20%',
-          background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.15) 25%, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 1) 100%)',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      />
-
-      {/* Fondo wireframe 3D animado - morado */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '-10%',
-          left: '-10%',
-          right: '-10%',
-          bottom: '-10%',
-        }}
-      >
-        <WireframeBackground />
-      </Box>
-
-      {/* Partículas flotantes globales - más distribuidas */}
-      <FloatingParticles count={35} />
-
-      {/* Difuminado inferior para transición suave a siguiente sección */}
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '30%',
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 1) 100%)',
-          pointerEvents: 'none',
-          zIndex: 2,
-        }}
-      />
-
-      {/* Contenedor principal con 3 columnas */}
-      <Box
-        sx={{
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           position: 'relative',
-          zIndex: 10,
-          overflow: 'hidden',
-          padding: { xs: '40px 20px', md: '60px 40px' },
+          zIndex: 1,
+          height: { xs: 'auto', md: '100vh' },
+          minHeight: { xs: 'auto', md: '600px' },
+          display: 'flex',
+          flexDirection: 'column',
+          pt: { xs: '64px', md: '40px' },
+          pb: { xs: '64px', md: 0 },
         }}
       >
-        <Container maxWidth="xl" sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-          <Grid container spacing={0} sx={{ height: '100%', alignItems: 'center' }}>
+        {/* ——— Encabezado ——— */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65 }}
+          style={{ flexShrink: 0 }}
+        >
+          <Box
+            sx={{
+              textAlign: 'center',
+              pt: 0,
+              pb: { xs: '32px', md: '28px' },
+              px: 3,
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 1.5 }}>
+              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
+              <Typography
+                sx={{
+                  fontSize: '11px',
+                  letterSpacing: '0.2em',
+                  color: 'rgba(139,92,246,0.8)',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                }}
+              >
+                LOS FUNDADORES
+              </Typography>
+              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
+            </Box>
 
-            {/* COLUMNA IZQUIERDA - Imagen Santiago */}
-            <Grid
-              item
-              xs={12}
-              md={2.5}
+            <Typography
+              variant="h2"
               sx={{
-                display: { xs: 'none', md: 'flex' },
-                justifyContent: 'flex-start',
-                alignItems: 'flex-end',
-                height: '100%',
-                pl: { md: 2, lg: 3 },
+                fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
+                fontWeight: 700,
+                background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.65) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                mt: 1,
+                mb: 1.5,
+                lineHeight: 1.15,
               }}
             >
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: isVisible ? 1 : 0, x: isVisible ? 0 : -50 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
-                <Box sx={{ position: 'relative' }}>
-                  {/* Glow behind Santiago */}
-                  <Box sx={{
-                    position: 'absolute', width: '200px', height: '300px',
-                    background: 'radial-gradient(ellipse, rgba(232,121,249,0.15) 0%, transparent 70%)',
-                    bottom: 0, left: '50%', transform: 'translateX(-50%)',
-                    zIndex: -1, filter: 'blur(30px)', pointerEvents: 'none',
-                  }} />
-                  <Box
-                    component="img"
-                    src="/images/FotoSantiago.png"
-                    alt="Santiago Chavarro"
-                    sx={{
-                      height: { md: '380px', lg: '400px' },
-                      width: 'auto',
-                      objectFit: 'contain',
-                      transition: 'all 0.4s ease',
-                      '&:hover': {
-                        transform: 'translateY(-15px)',
-                      },
-                    }}
-                  />
-                </Box>
-              </motion.div>
-            </Grid>
+              Las mentes detrás de NextFlow
+            </Typography>
 
-            {/* COLUMNA CENTRAL - Contenido */}
-            <Grid item xs={12} md={7}>
-              <Box sx={{ textAlign: 'center', px: { xs: 2, md: 3 } }}>
+            <Typography
+              sx={{
+                fontSize: '0.875rem',
+                color: 'rgba(209,213,219,0.6)',
+              }}
+            >
+              Dos ingenieros que convirtieron su obsesión por la tecnología en una agencia.
+            </Typography>
+          </Box>
+        </motion.div>
 
-                {/* Eyebrow label */}
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 2 }}>
-                  <Box sx={{ width: '24px', height: '1px', background: 'rgba(139,92,246,0.4)' }} />
-                  <Typography sx={{
-                    fontSize: '11px', letterSpacing: '0.2em', color: 'rgba(139,92,246,0.9)',
-                    textTransform: 'uppercase', fontWeight: 600,
-                  }}>Los Fundadores</Typography>
-                  <Box sx={{ width: '24px', height: '1px', background: 'rgba(139,92,246,0.4)' }} />
-                </Box>
+        {/* ——— Grid de fundadores — ocupa el resto del alto ——— */}
+        <Box sx={{ flex: 1, overflow: 'hidden', pb: { xs: 0, md: '52px' } }}>
+          <Container maxWidth="xl" sx={{ height: '100%' }}>
+            <Grid
+              container
+              spacing={0}
+              sx={{ height: '100%' }}
+            >
+              {FOUNDERS.map((founder) => {
+                const isLeft = founder.photoSide === 'left';
 
-                {/* Headline */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-                      fontWeight: 700,
-                      textAlign: 'center',
-                      mb: 4,
-                      background: 'linear-gradient(to bottom, #FFFFFF, rgba(255, 255, 255, 0.6))',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
+                return (
+                  <Grid
+                    item
+                    xs={12}
+                    md={6}
+                    key={founder.name}
+                    sx={{ height: { xs: 'auto', md: '100%' } }}
                   >
-                    Las mentes detrás de NextFlow
-                  </Typography>
-                </motion.div>
-
-                {/* Subtítulo */}
-                <Typography sx={{
-                  fontSize: 'clamp(0.875rem, 1.2vw, 1rem)',
-                  color: 'rgba(209,213,219,0.7)',
-                  textAlign: 'center',
-                  mb: 6,
-                }}>
-                  Dos ingenieros que convirtieron su obsesión por la tecnología en una agencia.
-                </Typography>
-
-                {/* Grid de información de ambos fundadores - más horizontal */}
-                <Grid container spacing={4} sx={{ justifyContent: 'center' }}>
-
-                  {/* Info Santiago */}
-                  <Grid item xs={12} md={6}>
-                    <Box
-                      sx={{
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(139,92,246,0.15)',
-                        borderRadius: '16px',
-                        padding: '28px',
-                        backdropFilter: 'blur(8px)',
-                        opacity: isVisible ? 1 : 0,
-                        transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
-                        transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s',
-                        maxWidth: '450px',
-                        mx: 'auto',
-                        '&:hover': {
-                          borderColor: 'rgba(139,92,246,0.4)',
-                          boxShadow: '0 0 30px rgba(139,92,246,0.08)',
-                        },
-                      }}
+                    <motion.div
+                      initial={{ opacity: 0, x: founder.animX }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: founder.delay }}
+                      style={{ height: '100%' }}
                     >
-                      {/* Imagen en mobile */}
                       <Box
-                        component="img"
-                        src="/images/FotoSantiago.png"
-                        alt="Santiago Chavarro"
                         sx={{
-                          display: { xs: 'block', md: 'none' },
-                          height: '250px',
-                          width: 'auto',
-                          maxWidth: '100%',
-                          objectFit: 'contain',
-                          mx: 'auto',
-                          mb: 3,
-                        }}
-                      />
-
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
-                        transition={{ duration: 0.4, delay: 0.3 }}
-                      >
-                        <Box component="span" sx={{
-                          display: 'inline-block', mb: 1,
-                          background: 'rgba(232,121,249,0.1)', color: '#E879F9',
-                          fontSize: '10px', padding: '3px 10px', borderRadius: '20px',
-                          border: '1px solid rgba(232,121,249,0.3)', letterSpacing: '0.1em',
-                          textTransform: 'uppercase', fontWeight: 600,
-                        }}>CO-FUNDADOR</Box>
-                      </motion.div>
-
-                      <Typography
-                        variant="h4"
-                        sx={{
-                          fontSize: { xs: '1.5rem', md: '1.75rem' },
-                          fontWeight: 700,
-                          color: '#FFFFFF',
-                          mb: 0.5,
+                          display: 'flex',
+                          flexDirection: { xs: 'column', md: isLeft ? 'row' : 'row-reverse' },
+                          alignItems: { xs: 'center', md: 'stretch' },
+                          height: { xs: 'auto', md: '100%' },
+                          gap: { xs: 3, md: 4 },
+                          py: { xs: '32px', md: 0 },
+                          px: { xs: 3, md: 0 },
                         }}
                       >
-                        Santiago Chavarro
-                      </Typography>
+                        {/* ——— FOTO — se estira para llenar el alto ——— */}
+                        <Box
+                          sx={{
+                            position: 'relative',
+                            overflow: 'visible',
+                            flexShrink: 0,
+                            width: { xs: '200px', md: '42%' },
+                            height: { xs: '260px', md: 'auto' },
+                            alignSelf: { xs: 'center', md: 'stretch' },
+                          }}
+                        >
+                          {/* Glow atmosférico */}
+                          <Box
+                            aria-hidden="true"
+                            sx={{
+                              position: 'absolute',
+                              top: '-80px',
+                              left: isLeft ? '-100px' : '-40px',
+                              right: isLeft ? '-40px' : '-100px',
+                              bottom: '-80px',
+                              background: `radial-gradient(ellipse at ${isLeft ? '35%' : '65%'} 50%, ${founder.glowColor} 0%, ${founder.glowColor2} 45%, transparent 70%)`,
+                              filter: 'blur(60px)',
+                              zIndex: 0,
+                              pointerEvents: 'none',
+                            }}
+                          />
 
-                      <Typography
-                        sx={{
-                          fontSize: { xs: '1rem', md: '1.125rem' },
-                          fontWeight: 500,
-                          color: '#E879F9',
-                          mb: 2,
-                        }}
-                      >
-                        Co-fundador & CEO
-                      </Typography>
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.97 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7, delay: founder.delay + 0.12 }}
+                            style={{ position: 'relative', zIndex: 1, height: '100%' }}
+                          >
+                            <Box
+                              component="img"
+                              src={founder.image}
+                              alt={founder.name}
+                              sx={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                objectPosition: 'top center',
+                                borderRadius: { xs: '16px', md: 0 },
+                                display: 'block',
+                                borderLeft: isLeft
+                                  ? 'none'
+                                  : { md: `1px solid ${founder.badgeBorder}` },
+                                borderRight: isLeft
+                                  ? { md: `1px solid ${founder.badgeBorder}` }
+                                  : 'none',
+                              }}
+                            />
+                          </motion.div>
+                        </Box>
 
-                      <Typography
-                        sx={{
-                          fontSize: { xs: '0.875rem', md: '0.95rem' },
-                          fontWeight: 300,
-                          color: '#D1D5DB',
-                          lineHeight: 1.6,
-                          textAlign: 'justify',
-                        }}
-                      >
-                        Santiago diseña sistemas antes de escribir una línea de código. Su enfoque en arquitectura limpia y escalable convierte ideas complejas en productos que funcionan bajo presión — y que el equipo puede mantener sin morir en el intento.
-                      </Typography>
-                    </Box>
+                        {/* ——— INFO — centrado verticalmente ——— */}
+                        <Box
+                          sx={{
+                            flex: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: { xs: 'center', md: 'flex-start' },
+                            textAlign: { xs: 'center', md: 'left' },
+                            px: { xs: 0, md: isLeft ? '12px 56px 12px 40px' : '12px 40px 12px 56px' },
+                          }}
+                        >
+                          {/* Badge */}
+                          <Box
+                            component="span"
+                            sx={{
+                              display: 'inline-block',
+                              mb: 2,
+                              background: founder.badgeBg,
+                              color: founder.accent,
+                              border: `1px solid ${founder.badgeBorder}`,
+                              fontSize: '10px',
+                              letterSpacing: '0.15em',
+                              textTransform: 'uppercase',
+                              padding: '3px 12px',
+                              borderRadius: '20px',
+                              fontWeight: 600,
+                            }}
+                          >
+                            {founder.badge}
+                          </Box>
+
+                          {/* Nombre */}
+                          <Typography
+                            component="h3"
+                            sx={{
+                              fontSize: 'clamp(1.3rem, 1.8vw, 1.7rem)',
+                              fontWeight: 700,
+                              color: '#FFFFFF',
+                              mb: 0.5,
+                              lineHeight: 1.2,
+                            }}
+                          >
+                            {founder.name}
+                          </Typography>
+
+                          {/* Rol */}
+                          <Typography
+                            sx={{
+                              fontSize: '0.875rem',
+                              fontWeight: 500,
+                              color: founder.accent,
+                              mb: 2.5,
+                            }}
+                          >
+                            {founder.role}
+                          </Typography>
+
+                          {/* Separador */}
+                          <Box
+                            sx={{
+                              width: '36px',
+                              height: '2px',
+                              background: `linear-gradient(to right, ${founder.separatorFrom}, transparent)`,
+                              mb: 2.5,
+                            }}
+                          />
+
+                          {/* Descripción */}
+                          <Typography
+                            sx={{
+                              fontSize: '0.875rem',
+                              color: 'rgba(209,213,219,0.75)',
+                              lineHeight: 1.75,
+                              maxWidth: '320px',
+                            }}
+                          >
+                            {founder.description}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </motion.div>
                   </Grid>
-
-                  {/* Separador vertical */}
-                  <Grid item sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', px: 0 }}>
-                    <Box sx={{
-                      width: '1px', height: '60%', alignSelf: 'center',
-                      background: 'linear-gradient(to bottom, transparent, rgba(139,92,246,0.3), transparent)',
-                    }} />
-                  </Grid>
-
-                  {/* Info Samuel */}
-                  <Grid item xs={12} md={6}>
-                    <Box
-                      sx={{
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(139,92,246,0.15)',
-                        borderRadius: '16px',
-                        padding: '28px',
-                        backdropFilter: 'blur(8px)',
-                        opacity: isVisible ? 1 : 0,
-                        transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
-                        transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
-                        maxWidth: '450px',
-                        mx: 'auto',
-                        '&:hover': {
-                          borderColor: 'rgba(139,92,246,0.4)',
-                          boxShadow: '0 0 30px rgba(139,92,246,0.08)',
-                        },
-                      }}
-                    >
-                      {/* Imagen en mobile */}
-                      <Box
-                        component="img"
-                        src="/images/FotoSamuFull.png"
-                        alt="Samuel Aristizabal"
-                        sx={{
-                          display: { xs: 'block', md: 'none' },
-                          height: '250px',
-                          width: 'auto',
-                          maxWidth: '100%',
-                          objectFit: 'contain',
-                          mx: 'auto',
-                          mb: 3,
-                        }}
-                      />
-
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
-                        transition={{ duration: 0.4, delay: 0.3 }}
-                      >
-                        <Box component="span" sx={{
-                          display: 'inline-block', mb: 1,
-                          background: 'rgba(6,182,212,0.1)', color: '#06B6D4',
-                          fontSize: '10px', padding: '3px 10px', borderRadius: '20px',
-                          border: '1px solid rgba(6,182,212,0.3)', letterSpacing: '0.1em',
-                          textTransform: 'uppercase', fontWeight: 600,
-                        }}>CO-FUNDADOR</Box>
-                      </motion.div>
-
-                      <Typography
-                        variant="h4"
-                        sx={{
-                          fontSize: { xs: '1.5rem', md: '1.75rem' },
-                          fontWeight: 700,
-                          color: '#FFFFFF',
-                          mb: 0.5,
-                        }}
-                      >
-                        Samuel Aristizabal
-                      </Typography>
-
-                      <Typography
-                        sx={{
-                          fontSize: { xs: '1rem', md: '1.125rem' },
-                          fontWeight: 500,
-                          color: '#06B6D4',
-                          mb: 2,
-                        }}
-                      >
-                        Co-fundador & CTO
-                      </Typography>
-
-                      <Typography
-                        sx={{
-                          fontSize: { xs: '0.875rem', md: '0.95rem' },
-                          fontWeight: 300,
-                          color: '#D1D5DB',
-                          lineHeight: 1.6,
-                          textAlign: 'justify',
-                        }}
-                      >
-                        Samuel convierte requerimientos difusos en sistemas estables. Desde automatizaciones en n8n hasta plataformas full-stack, su prioridad es siempre la misma: que lo que se construya funcione, escale y genere resultados reales.
-                      </Typography>
-                    </Box>
-                  </Grid>
-
-                </Grid>
-              </Box>
+                );
+              })}
             </Grid>
-
-            {/* COLUMNA DERECHA - Imagen Samuel */}
-            <Grid
-              item
-              xs={12}
-              md={2.5}
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                justifyContent: 'flex-end',
-                alignItems: 'flex-end',
-                height: '100%',
-                pr: { md: 2, lg: 3 },
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: isVisible ? 1 : 0, x: isVisible ? 0 : 50 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-              >
-                <Box sx={{ position: 'relative' }}>
-                  {/* Glow behind Samuel */}
-                  <Box sx={{
-                    position: 'absolute', width: '200px', height: '300px',
-                    background: 'radial-gradient(ellipse, rgba(6,182,212,0.15) 0%, transparent 70%)',
-                    bottom: 0, left: '50%', transform: 'translateX(-50%)',
-                    zIndex: -1, filter: 'blur(30px)', pointerEvents: 'none',
-                  }} />
-                  <Box
-                    component="img"
-                    src="/images/FotoSamuFull.png"
-                    alt="Samuel Aristizabal"
-                    sx={{
-                      height: { md: '380px', lg: '400px' },
-                      width: 'auto',
-                      objectFit: 'contain',
-                      transition: 'all 0.4s ease',
-                      '&:hover': {
-                        transform: 'translateY(-15px)',
-                      },
-                    }}
-                  />
-                </Box>
-              </motion.div>
-            </Grid>
-
-          </Grid>
-        </Container>
+          </Container>
+        </Box>
       </Box>
     </section>
   );

@@ -26,11 +26,11 @@
 
 .dark {
   /* Modo oscuro */
-  --background: #0F172A;
+  --background: #030303;
   --foreground: #F1F5F9;
-  --card: #1E293B;
+  --card: #0f0f17;
   --card-foreground: #F1F5F9;
-  --muted: #334155;
+  --muted: #1a1a2e;
   --muted-foreground: #94A3B8;
 }
 
