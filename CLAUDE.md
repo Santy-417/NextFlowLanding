@@ -12,11 +12,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **React**: 19
 - **TypeScript**: Strict mode
 - **UI**: Material-UI v6 + Tailwind CSS
+- **Animaciones**: Framer Motion (con soporte para `prefers-reduced-motion`)
+- **3D Graphics**: Spline (`@splinetool/react-spline`) para avatares interactivos
 - **State Management**: TanStack Query v5
 - **Forms**: React Hook Form + Zod
 - **i18n**: next-intl (Español/Inglés)
 - **Email**: Nodemailer
 - **Analytics**: Google Analytics 4 + Meta Pixel
+- **Iconos**: Material-UI Icons + Lucide React
 
 ## Common Commands
 
@@ -105,13 +108,20 @@ El proyecto usa rutas dinámicas con locale:
 - **Modo oscuro**: Manejado por Providers con localStorage persistence
 - **Tailwind**: Integrado con MUI, usar utility classes cuando sea apropiado
 
-### Background Effects en HeroSection
+### Background Effects en NAIASection
 
-El HeroSection usa efectos de iluminación orgánica con:
-- **Blobs difuminados**: Gradientes radiales con `filter: blur()` para crear efectos de luz
-- **Curva neon ondulada**: Usa `conic-gradient` con `maskImage` para efecto de curva
-- **Animaciones float**: Movimiento orgánico de los blobs con keyframes
-- **Responsive**: Tamaños de blobs adaptativos según breakpoints (xs, sm, md, lg)
+La nueva NAIASection (Hero) usa efectos atmosféricos sofisticados:
+- **Spotlight SVG**: Componente reutilizable con blur filter, posicionado en top-left
+  - Animación: fade-in + scale transform (definida en `tailwind.config.ts`)
+  - Fill color: `rgba(139, 92, 246, 0.28)` (morado transparente)
+- **Radial Gradients**: 3 capas de gradientes radiales
+  1. Primer glow: `ellipse 70% 55% at 20% 50%` - morado oscuro (20% opacity)
+  2. Segundo glow: `ellipse 55% 65% at 85% 45%` - magenta (6% opacity)
+  3. Tercer glow (en HeroVisual): `ellipse 60% 70% at 55% 45%` - morado (9% opacity)
+- **Grid Texture**: Pattern lineal 72x72px con `rgba(139,92,246,1)`, 1.6% opacity
+- **Vignettes**: Fade gradients en bottom (30% height) y left (25% width)
+- **Responsive**: Positioning y sizing adaptan con viewport usando `clamp()`
+- **Animación**: Fade-in + slide-up on mount (respeta `prefers-reduced-motion`)
 
 ## Estructura de Componentes
 
@@ -125,13 +135,99 @@ El HeroSection usa efectos de iluminación orgánica con:
 
 Orden de las secciones en la home:
 
-1. **HeroSection** - Hero con título, subtítulo, CTAs principales
+1. **NAIASection** ⭐ (Hero Interactivo) - Chat con IA asistente NAIA + Avatar 3D
+   - **Nuevo (2025)**: Reemplaza la anterior HeroSection con experiencia interactiva
+   - Layout responsivo: chat a la izquierda, avatar 3D a la derecha (full-width en mobile)
+   - Diseño glassmorphism con efectos atmosféricos
+   - Integración con Spline para avatar 3D del personaje NAIA
+   - Chat interactivo con respuestas mocked (sin backend aún)
+   - **Componentes relacionados**:
+     - `components/sections/NAIASection.tsx` - Contenedor principal
+     - `components/sections/hero/ChatInterface.tsx` - Interfaz de chat interactivo
+     - `components/sections/hero/HeroVisual.tsx` - Avatar 3D con efectos
+     - `components/ui/SplineScene.tsx` - Wrapper para Spline 3D
+     - `components/ui/Spotlight.tsx` - Efecto SVG de spotlight animado
 2. **AboutSection** - Equipo (fundadores destacados primero)
 3. **ServicesSection** - Grid de servicios con iconos MUI (destacar n8n)
 4. **ProjectsSection** - Portfolio con filtros por categoría
 5. **ClientsSection** - Logos y casos de éxito
 6. **CTASection** - Call to action para agendar consultoría
 7. **ContactSection** - Formulario de contacto con validación
+
+#### NAIASection - Detalles de Implementación
+
+**Ubicación**: `components/sections/NAIASection.tsx` + subdirectorio `components/sections/hero/`
+
+**Características técnicas**:
+- **Framework**: Next.js 15 (App Router) + React 19
+- **Estilos**: Tailwind CSS + estilos inline con CSS variables
+- **Animaciones**: Framer Motion con soporte para `prefers-reduced-motion`
+- **Diseño**: Glassmorphism con `backdrop-filter: blur(12px)`
+- **Responsive**: Usa `clamp()` para tipografía y espaciado (sin breakpoints hardcodeados)
+- **Altura**: `100dvh` (100% dynamic viewport height)
+- **Dark mode**: Background `#030303`, colores morados/magentas del branding
+
+**Componentes y responsabilidades**:
+
+1. **ChatInterface** (`components/sections/hero/ChatInterface.tsx`)
+   - Interfaz de chat completamente funcional
+   - Efectos: Typewriter inicial, burbujas animadas, typing indicator
+   - Quick action chips: e-commerce, sales, support (con respuestas contextuales)
+   - Textarea con auto-resize (max-height: 120px)
+   - Envío con Enter key o click en botón
+   - **Accessibilidad**: `aria-live="polite"`, `aria-label` en botones/inputs, semantic HTML
+   - **Respuestas mocked**:
+     - CHIP_RESPONSES: Respuestas específicas por categoría seleccionada
+     - DEFAULT_RESPONSES: Rotación de 4 respuestas genéricas
+   - **Avatar NAIA**: Gradiente `linear-gradient(135deg, #7C3AED, #C026D3)` con glow
+   - **Avatar Usuario**: Fondo gris sutil con badge "TÚ"
+
+2. **HeroVisual** (`components/sections/hero/HeroVisual.tsx`)
+   - Container para el avatar 3D Spline
+   - Glow atmosférico detrás del personaje (radial gradient morado)
+   - Vignettes para blend suave con fondos:
+     - Bottom: fade to `#030303`
+     - Left: fade to `#030303`
+   - Label NAIA flotante con:
+     - Text gradient: `linear-gradient(135deg, #A78BFA 0%, #F0ABFC 50%, #67E8F9 100%)`
+     - Subtítulo: "Nextflow AI Assistant"
+
+3. **SplineScene** (`components/ui/SplineScene.tsx`)
+   - Wrapper lazy-loaded para `@splinetool/react-spline`
+   - Suspense fallback durante carga
+   - Props: `scene` (URL), `className` (opcional)
+   - Escena actual: `https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode`
+
+4. **Spotlight** (`components/ui/Spotlight.tsx`)
+   - Componente SVG con blur filter
+   - Animación CSS: fade-in + scale transform
+   - Props: `className` (posición), `fill` (color)
+   - Keyframe definido en `tailwind.config.ts`: `spotlight` animation
+
+**Efectos visuales**:
+- Atmosféricos: 3 capas de radial gradients con colores morados/rosas
+- Grid texture: 72x72px, 1.6% opacity para patrón sutil
+- Spotlight SVG: Posicionado en top-left con animation
+- Vignettes: Gradientes lineales en bottom y left para blending
+- Animación de entrada: Fade + slide up (respeta prefers-reduced-motion)
+
+**Responsive design**:
+```
+Mobile (xs):
+- Chat: full-width, flex-1 min-h-0
+- Avatar: hidden
+
+Desktop (lg+):
+- Chat: 50% width (lg:w-1/2)
+- Avatar: 50% width (flex-1)
+- Ambas columnas: 100dvh height
+```
+
+**Tipografía responsiva**:
+- Headline: `clamp(1.5rem, 3.5vw, 2.75rem)`
+- Subtitle: `clamp(0.8rem, 1.2vw, 0.95rem)`
+- Padding top: `clamp(3.5rem, 8vh, 5rem)`
+- Padding left/right: `clamp(1.5rem, 5vw, 3rem)`
 
 ### UI Components
 

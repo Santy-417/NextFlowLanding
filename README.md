@@ -7,14 +7,17 @@ Landing page oficial de **NextFlow** - Empresa colombiana de desarrollo de softw
 - **Framework**: [Next.js 15](https://nextjs.org/) con App Router
 - **React**: 19
 - **TypeScript**: Strict mode habilitado
-- **UI Library**: [Material-UI v6](https://mui.com/)
+- **UI Library**: [Material-UI v6](https://mui.com/) + [Tailwind CSS](https://tailwindcss.com/)
 - **Estilos**: Tailwind CSS + Emotion (MUI)
+- **Animaciones**: [Framer Motion](https://www.framer.com/motion/) (con soporte para `prefers-reduced-motion`)
+- **3D Graphics**: [Spline](https://spline.design/) (`@splinetool/react-spline`) para avatares interactivos
+- **Iconos**: [Material-UI Icons](https://mui.com/material-ui/material-icons/) + [Lucide React](https://lucide.dev/)
 - **Estado del servidor**: TanStack Query v5
 - **Formularios**: React Hook Form + Zod
 - **HTTP Client**: Axios
-- **i18n**: next-intl (Español/Inglés)
-- **Animaciones**: Framer Motion
+- **i18n**: [next-intl](https://next-intl-docs.vercel.app/) (Español/Inglés)
 - **Email**: Nodemailer
+- **Analytics**: Google Analytics 4 + Meta Pixel
 
 ## Estructura del Proyecto
 
@@ -32,8 +35,21 @@ nextflow-landing/
 │   └── globals.css          # Estilos globales
 ├── components/
 │   ├── layout/              # Header, Footer, Nav
-│   ├── sections/            # Secciones del landing
-│   ├── ui/                  # Componentes reutilizables
+│   ├── sections/
+│   │   ├── NAIASection.tsx  # ⭐ Hero interactivo con chat + avatar 3D
+│   │   ├── hero/            # Subdirectorio para componentes de NAIASection
+│   │   │   ├── ChatInterface.tsx  # Chat interactivo con NAIA
+│   │   │   └── HeroVisual.tsx     # Avatar 3D + etiqueta NAIA
+│   │   ├── AboutSection.tsx
+│   │   ├── ServicesSection.tsx
+│   │   ├── ProjectsSection.tsx
+│   │   └── ...              # Otras secciones
+│   ├── ui/
+│   │   ├── SplineScene.tsx       # ⭐ Wrapper para Spline 3D
+│   │   ├── Spotlight.tsx         # ⭐ Componente SVG para efecto spotlight
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   └── ...                   # Otros componentes UI
 │   └── providers/           # Context providers
 ├── lib/                     # Utilidades y configuraciones
 │   ├── theme.ts            # MUI theme
@@ -57,9 +73,17 @@ nextflow-landing/
 │   │   ├── team/
 │   │   ├── projects/
 │   │   └── clients/
+│   ├── logoNextFlowMenu.png # Logo para header
 │   └── fonts/
+├── tailwind.config.ts       # Configuración Tailwind (con animaciones personalizadas)
+├── CLAUDE.md                # Documentación para Claude Code
 └── styles/
 ```
+
+**Cambios recientes (2025)**:
+- ⭐ **NAIASection**: Nueva sección hero con interfaz de chat interactivo y avatar 3D
+- ⭐ **SplineScene.tsx**: Componente reutilizable para integración con Spline 3D
+- ⭐ **Spotlight.tsx**: Componente SVG para efectos de iluminación atmosférica
 
 ## Paleta de Colores
 
@@ -280,6 +304,64 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
+```
+
+## NAIASection - Chat Interactivo con IA
+
+La sección hero (`NAIASection.tsx`) es una experiencia interactiva que incluye:
+
+### Características
+
+- **Chat en vivo**: Interfaz de chat funcional con respuestas mocked (sin backend aún)
+- **Avatar 3D**: Personaje NAIA renderizado con Spline.design
+- **Typewriter effect**: Animación de escritura en el mensaje inicial
+- **Quick actions**: Botones contextuales para casos de uso:
+  - Automatizar e-commerce
+  - Agentes de ventas
+  - Soporte 24/7
+- **Respuestas contextuales**: El chatbot da respuestas diferentes según el chip seleccionado
+- **Responsive**: Layout adaptativo (chat full-width en mobile, 50/50 en desktop)
+- **Efectos visuales**: Glassmorphism, spotlight animado, gradient glows
+
+### Componentes
+
+```
+components/sections/
+├── NAIASection.tsx              # Contenedor principal
+└── hero/
+    ├── ChatInterface.tsx        # Lógica del chat
+    └── HeroVisual.tsx           # Avatar 3D + etiqueta NAIA
+
+components/ui/
+├── SplineScene.tsx              # Wrapper para Spline
+└── Spotlight.tsx                # Efecto SVG animado
+```
+
+### Personalización
+
+**Cambiar la escena 3D de Spline**:
+En `components/sections/hero/HeroVisual.tsx`, actualiza la URL:
+```tsx
+<SplineScene
+  scene="https://prod.spline.design/TU_SCENE_ID/scene.splinecode"
+  className="w-full h-full"
+/>
+```
+
+**Modificar respuestas del chatbot**:
+En `components/sections/hero/ChatInterface.tsx`:
+```typescript
+const CHIP_RESPONSES: Record<string, string> = {
+  ecommerce: 'Tu respuesta para e-commerce...',
+  sales: 'Tu respuesta para sales...',
+  support: 'Tu respuesta para support...',
+}
+
+const DEFAULT_RESPONSES = [
+  'Respuesta 1...',
+  'Respuesta 2...',
+  // ...
+]
 ```
 
 ## Internacionalizacion
