@@ -1,145 +1,152 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
-import { Zap } from 'lucide-react'
+import BoltIcon from '@mui/icons-material/Bolt'
 import { ChatInterface } from './hero/ChatInterface'
-import { HeroVisual } from './hero/HeroVisual'
 import { Spotlight } from '@/components/ui/Spotlight'
 
 export function NAIASection() {
-  const shouldReduceMotion = useReducedMotion()
+  const reduce = useReducedMotion()
 
   return (
     <section
       id="hero-section"
       aria-label="Hero — NAIA Chat"
-      className="relative w-screen overflow-x-hidden"
-      style={{
-        background: '#030303',
-        height: '100dvh',
-        minHeight: '560px',
-        colorScheme: 'dark',
-      }}
+      style={{ background: '#09090f', colorScheme: 'dark', position: 'relative' }}
     >
-      {/* ── Atmospheric glows ── */}
-      <Spotlight
-        className="-top-40 left-0 md:left-40 md:-top-20"
-        fill="rgba(139, 92, 246, 0.28)"
-      />
+      {/* ── Background effects ── */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 70% 55% at 20% 50%, rgba(109,40,217,0.07) 0%, transparent 70%)',
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 55% 65% at 85% 45%, rgba(192,38,211,0.06) 0%, transparent 65%)',
-        }}
-      />
-      {/* Grid texture */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(139,92,246,1) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,1) 1px, transparent 1px)',
-          backgroundSize: '72px 72px',
-          opacity: 0.016,
-        }}
-      />
-
-      {/* ── Main grid: fills entire section height ── */}
-      <div className="absolute inset-0 flex">
-
-        {/* LEFT — Copy + Chat (mobile: full width, lg: 50%) */}
-        <motion.div
-          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: [0.23, 1, 0.32, 1] }}
-          className="flex flex-col h-full flex-1 lg:flex-none lg:w-1/2 overflow-hidden"
+        style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}
+      >
+        <Spotlight className="-top-40 left-1/4 md:left-1/2 md:-top-20" fill="rgba(139, 92, 246, 0.22)" />
+        <div
           style={{
-            paddingTop: 'clamp(2.5rem, 6vh, 4rem)',
-            paddingBottom: 'clamp(1rem, 4vh, 1.5rem)',
-            paddingLeft: 'clamp(1.5rem, 5vw, 3rem)',
-            paddingRight: 'clamp(1.5rem, 4vw, 2.5rem)',
+            position: 'absolute', inset: 0,
+            background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(109,40,217,0.09) 0%, transparent 70%)',
           }}
+        />
+        <div
+          style={{
+            position: 'absolute', inset: 0,
+            background: 'radial-gradient(ellipse 60% 50% at 80% 70%, rgba(192,38,211,0.05) 0%, transparent 65%)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundImage:
+              'linear-gradient(rgba(139,92,246,1) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,1) 1px, transparent 1px)',
+            backgroundSize: '72px 72px',
+            opacity: 0.016,
+          }}
+        />
+      </div>
+
+      {/* ── Content: centered column ── */}
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          minHeight: '100vh',
+          paddingTop: 'calc(68px + clamp(2rem, 5vh, 3.5rem))',
+          paddingBottom: 'clamp(2rem, 4vh, 3rem)',
+          paddingLeft: 'clamp(1rem, 4vw, 2rem)',
+          paddingRight: 'clamp(1rem, 4vw, 2rem)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Hero text — centrado */}
+        <motion.div
+          initial={{ opacity: 0, y: reduce ? 0 : 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          style={{ textAlign: 'center', width: '100%', maxWidth: '720px', marginBottom: '2rem' }}
         >
-          {/* ── Copy block ── */}
-          <div className="flex-shrink-0 mb-4">
+          {/* Badge */}
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.375rem 0.875rem',
+              borderRadius: '9999px',
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              color: '#c4b5fd',
+              background: 'rgba(139,92,246,0.1)',
+              border: '1px solid rgba(139,92,246,0.25)',
+              marginBottom: '1.25rem',
+            }}
+          >
             <span
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium text-violet-300 mb-2"
               style={{
-                background: 'rgba(139,92,246,0.1)',
-                border: '1px solid rgba(139,92,246,0.25)',
+                width: '0.375rem',
+                height: '0.375rem',
+                borderRadius: '9999px',
+                background: '#34d399',
+                animation: 'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite',
+              }}
+            />
+            <BoltIcon sx={{ fontSize: 10 }} style={{ color: '#a78bfa' }} aria-hidden="true" />
+            NextFlow AI · En línea
+          </span>
+
+          {/* Headline */}
+          <h1
+            style={{
+              fontWeight: 900,
+              color: '#fff',
+              lineHeight: 1.08,
+              letterSpacing: '-0.02em',
+              marginBottom: '1rem',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            }}
+          >
+            Automatiza tu{' '}
+            <span
+              style={{
+                background: 'linear-gradient(135deg, #A78BFA 0%, #F472B6 52%, #67E8F9 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <Zap size={10} className="text-violet-400" aria-hidden="true" />
-              NextFlow AI · En línea
+              negocio con IA
             </span>
+          </h1>
 
-            <h1
-              className="font-black text-white leading-[1.08] tracking-tight mt-2"
-              style={{
-                fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
-                textWrap: 'balance',
-              } as React.CSSProperties}
-            >
-              Automatiza tu{' '}
-              <span
-                style={{
-                  background:
-                    'linear-gradient(135deg, #A78BFA 0%, #F472B6 52%, #67E8F9 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                negocio con IA
-              </span>
-            </h1>
-
-            <p
-              className="mt-2 text-slate-400 leading-relaxed text-sm"
-              style={{
-                fontSize: 'clamp(0.75rem, 1vw, 0.875rem)',
-                maxWidth: '38ch',
-              }}
-            >
-              Habla con <strong className="text-slate-300 font-medium">NAIA</strong> y descubre
-              cómo NextFlow convierte procesos manuales en flujos inteligentes.
-            </p>
-          </div>
-
-          {/* ── Chat — fills all remaining space ── */}
-          <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-            <ChatInterface />
-          </div>
+          {/* Subtitle */}
+          <p
+            style={{
+              color: '#94a3b8',
+              lineHeight: 1.65,
+              fontSize: 'clamp(0.9rem, 1.5vw, 1.05rem)',
+              maxWidth: '52ch',
+              margin: '0 auto',
+            }}
+          >
+            Habla con <strong style={{ color: '#cbd5e1', fontWeight: 500 }}>NAIA</strong> y descubre
+            cómo NextFlow convierte procesos manuales en flujos inteligentes que ahorran tiempo y dinero.
+          </p>
         </motion.div>
 
-        {/* RIGHT — NAIA visual (hidden on mobile, visible on lg+) */}
+        {/* Chat container */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.75, ease: 'easeOut', delay: 0.2 }}
-          className="hidden lg:flex flex-1 h-full relative"
+          initial={{ opacity: 0, y: reduce ? 0 : 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1], delay: 0.15 }}
+          style={{
+            width: '100%',
+            maxWidth: '760px',
+            height: 'clamp(380px, 48vh, 500px)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
         >
-          {/* Left-to-right fade creates smooth transition from left text */}
-          <div
-            aria-hidden="true"
-            className="absolute top-0 bottom-0 left-0 z-10 pointer-events-none"
-            style={{
-              width: '100px',
-              background: 'linear-gradient(90deg, #030303 0%, transparent 100%)',
-            }}
-          />
-          <HeroVisual />
+          <ChatInterface />
         </motion.div>
       </div>
     </section>

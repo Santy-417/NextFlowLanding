@@ -162,6 +162,7 @@ export default function ContactSection() {
                       error={!!errors.name}
                       helperText={errors.name?.message}
                       sx={inputSx}
+                      inputProps={{ 'data-lpignore': 'true' }}
                     />
                   </Grid>
 
@@ -174,6 +175,7 @@ export default function ContactSection() {
                       error={!!errors.email}
                       helperText={errors.email?.message}
                       sx={inputSx}
+                      inputProps={{ 'data-lpignore': 'true' }}
                     />
                   </Grid>
 
@@ -185,6 +187,7 @@ export default function ContactSection() {
                       error={!!errors.phone}
                       helperText={errors.phone?.message}
                       sx={inputSx}
+                      inputProps={{ 'data-lpignore': 'true' }}
                     />
                   </Grid>
 
@@ -196,6 +199,7 @@ export default function ContactSection() {
                       error={!!errors.company}
                       helperText={errors.company?.message}
                       sx={inputSx}
+                      inputProps={{ 'data-lpignore': 'true' }}
                     />
                   </Grid>
 
@@ -209,6 +213,7 @@ export default function ContactSection() {
                       error={!!errors.message}
                       helperText={errors.message?.message}
                       sx={inputSx}
+                      inputProps={{ 'data-lpignore': 'true' }}
                     />
                   </Grid>
 

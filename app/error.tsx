@@ -10,7 +10,6 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log del error en consola
     console.error(error);
   }, [error]);
 

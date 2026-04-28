@@ -3,19 +3,18 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
 import { AppBar, Toolbar, Container, Box, IconButton, Menu, MenuItem, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
 const navItems = [
-  { key: 'home', href: '#' },
-  { key: 'services', href: '#services' },
-  { key: 'projects', href: '#projects' },
-  { key: 'contact', href: '#contact' },
+  { key: 'home',     label: 'Inicio',    href: '/',              scrollTop: true },
+  { key: 'about',    label: 'Nosotros',  href: '#about-section', scrollTop: false },
+  { key: 'services', label: 'Servicios', href: '#services',      scrollTop: false },
+  { key: 'projects', label: 'Proyectos', href: '#projects',      scrollTop: false },
+  { key: 'contact',  label: 'Contacto',  href: '#contact',       scrollTop: false },
 ];
 
 export default function Header() {
-  const t = useTranslations('nav');
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -67,7 +66,7 @@ export default function Header() {
           {/* Logo */}
           <Box
             component={Link}
-            href="#"
+            href="/"
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -111,6 +110,7 @@ export default function Header() {
                 key={item.key}
                 href={item.href}
                 component={Link}
+                onClick={item.scrollTop ? () => window.scrollTo({ top: 0, behavior: 'smooth' }) : undefined}
                 sx={{
                   color: '#FFFFFF',
                   opacity: 0.9,
@@ -162,14 +162,13 @@ export default function Header() {
                   },
                 }}
               >
-                {t(item.key)}
+                {item.label}
               </Button>
             ))}
           </Box>
 
-          {/* Right side controls */}
+          {/* Mobile Menu Button */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            {/* Mobile Menu Button */}
             <IconButton
               size="large"
               aria-label="menu"
@@ -209,7 +208,10 @@ export default function Header() {
             {navItems.map((item) => (
               <MenuItem
                 key={item.key}
-                onClick={handleCloseMobileMenu}
+                onClick={() => {
+                  handleCloseMobileMenu();
+                  if (item.scrollTop) window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 component={Link}
                 href={item.href}
                 sx={{
@@ -225,7 +227,7 @@ export default function Header() {
                   },
                 }}
               >
-                {t(item.key)}
+                {item.label}
               </MenuItem>
             ))}
           </Menu>

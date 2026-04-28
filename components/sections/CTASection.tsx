@@ -20,23 +20,47 @@ export default function CTASection() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #A855F7 0%, #C026D3 50%, #E879F9 100%)',
+        background: '#09090f',
         paddingTop: '100px',
         paddingBottom: '100px',
         overflow: 'hidden',
       }}
     >
-      {/* Textura de puntos sutil */}
+      {/* Glow violeta central */}
+      <Box
+        aria-hidden="true"
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse 75% 65% at 50% 50%, rgba(139,92,246,0.13) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+      {/* Grid sutil */}
       <Box
         aria-hidden="true"
         sx={{
           position: 'absolute',
           inset: 0,
           backgroundImage:
-            'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
+            'linear-gradient(rgba(139,92,246,1) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,1) 1px, transparent 1px)',
+          backgroundSize: '72px 72px',
+          opacity: 0.018,
           pointerEvents: 'none',
           zIndex: 0,
+        }}
+      />
+      {/* Línea superior con glow */}
+      <Box
+        aria-hidden="true"
+        sx={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0,
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.5) 30%, rgba(192,38,211,0.5) 70%, transparent 100%)',
+          pointerEvents: 'none',
+          zIndex: 1,
         }}
       />
 
@@ -83,12 +107,15 @@ export default function CTASection() {
             <Typography
               variant="h2"
               sx={{
-                color: '#FFFFFF',
-                fontWeight: 700,
+                fontWeight: 800,
                 mb: 3,
                 fontSize: 'clamp(2rem, 4vw, 3.2rem)',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.2,
+                background: 'linear-gradient(135deg, #ffffff 0%, #e2d9ff 50%, #f0abfc 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
             >
               ¿Listo para transformar tu negocio?
@@ -96,12 +123,12 @@ export default function CTASection() {
 
             <Typography
               sx={{
-                color: 'rgba(255,255,255,0.88)',
+                color: '#94a3b8',
                 mb: 6,
-                fontSize: 'clamp(1rem, 1.5vw, 1.2rem)',
-                lineHeight: 1.6,
+                fontSize: 'clamp(1rem, 1.5vw, 1.15rem)',
+                lineHeight: 1.65,
                 fontWeight: 400,
-                maxWidth: '560px',
+                maxWidth: '540px',
                 mx: 'auto',
               }}
             >
@@ -114,20 +141,20 @@ export default function CTASection() {
               size="large"
               onClick={handleCTAClick}
               sx={{
-                background: '#FFFFFF',
-                color: '#A855F7',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)',
+                color: '#ffffff',
                 px: { xs: 5, md: 7 },
                 py: { xs: 1.75, md: 2 },
                 fontSize: { xs: '1rem', md: '1.1rem' },
                 fontWeight: 700,
                 borderRadius: '50px',
                 textTransform: 'none',
-                boxShadow: '0 16px 48px rgba(0,0,0,0.25)',
+                boxShadow: '0 0 32px rgba(139,92,246,0.35)',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                 '&:hover': {
-                  background: '#F5F3FF',
-                  transform: 'translateY(-4px)',
-                  boxShadow: '0 24px 64px rgba(0,0,0,0.35)',
+                  background: 'linear-gradient(135deg, #6D28D9 0%, #A21CAF 100%)',
+                  transform: 'translateY(-3px)',
+                  boxShadow: '0 0 48px rgba(139,92,246,0.5)',
                 },
                 '&:active': {
                   transform: 'translateY(-1px)',

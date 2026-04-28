@@ -169,8 +169,8 @@ export const darkTheme = createTheme({
     primary: nextFlowColors.primary,
     secondary: nextFlowColors.secondary,
     background: {
-      default: '#030303',
-      paper: '#0f0f17',
+      default: '#09090f',
+      paper: '#0f0f1a',
     },
     text: {
       primary: '#F1F5F9',

@@ -2,37 +2,27 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { Send, ShoppingCart, Users, Headphones, Bot } from 'lucide-react'
+import SendIcon from '@mui/icons-material/Send'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import GroupIcon from '@mui/icons-material/Group'
+import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
+import SettingsIcon from '@mui/icons-material/Settings'
+import SmartToyIcon from '@mui/icons-material/SmartToy'
 
 interface Message {
   id: string
-  role: 'naia' | 'user'
+  role: 'assistant' | 'user'
   content: string
 }
 
-const INITIAL_MESSAGE =
-  'Hola, soy NAIA — la IA de NextFlow. Cuéntame: ¿qué proceso de tu negocio quieres automatizar hoy?'
+const WELCOME_MESSAGE =
+  'Hola, soy NAIA — la IA consultora de NextFlow. ¿En qué proceso de tu negocio puedo ayudarte hoy?'
 
-const CHIP_RESPONSES: Record<string, string> = {
-  ecommerce:
-    'E-commerce es donde más impacto generamos 🛒 Con n8n + IA automatizamos carritos abandonados, actualizaciones de inventario y notificaciones personalizadas. ¿Cuál es tu mayor cuello de botella hoy?',
-  sales:
-    'Los agentes de ventas IA de NextFlow califican leads automáticamente y agendan reuniones sin intervención humana 🤖 ¿Cuántos leads pierdes por falta de seguimiento?',
-  support:
-    'Un agente de soporte bien entrenado resuelve el 80% de consultas sin humano. Integramos con WhatsApp, Slack o tu plataforma favorita 💬 ¿Cuántos tickets gestionas al mes?',
-}
-
-const DEFAULT_RESPONSES = [
-  'Entendido. Con n8n y un agente IA podemos automatizar ese flujo en tiempo récord. ¿Cuántas horas al día te consume hoy?',
-  'Ese flujo lo hemos resuelto antes: capturamos el evento, lo procesamos con IA y disparamos la acción correcta. ¿Quieres ver un ejemplo real?',
-  'Suena como un caso perfecto para automatización. Hemos ayudado a empresas similares a ahorrar +40 horas semanales. ¿Agendamos una demo de 30 min? 🚀',
-  'Perfecto, eso es exactamente lo que hacemos en NextFlow. Escríbenos por WhatsApp y te mostramos el flujo completo en vivo.',
-]
-
-const QUICK_CHIPS = [
-  { id: 'ecommerce', label: 'Automatizar e-commerce', Icon: ShoppingCart },
-  { id: 'sales', label: 'Agentes de ventas', Icon: Users },
-  { id: 'support', label: 'Soporte 24/7', Icon: Headphones },
+const CHIPS = [
+  { id: 'ecommerce', label: 'Automatizar e-commerce',       Icon: ShoppingCartIcon },
+  { id: 'sales',     label: 'Agente de ventas IA',           Icon: GroupIcon },
+  { id: 'support',   label: 'Soporte 24/7 con IA',           Icon: HeadsetMicIcon },
+  { id: 'internal',  label: 'Automatizar procesos internos',  Icon: SettingsIcon },
 ]
 
 function NaiaAvatar() {
@@ -44,7 +34,7 @@ function NaiaAvatar() {
         boxShadow: '0 0 14px rgba(139,92,246,0.55)',
       }}
     >
-      <Bot size={13} className="text-white" />
+      <SmartToyIcon sx={{ fontSize: 13 }} className="text-white" />
     </div>
   )
 }
@@ -61,76 +51,88 @@ function UserAvatar() {
 }
 
 export function ChatInterface() {
-  const shouldReduceMotion = useReducedMotion()
-  const [messages, setMessages] = useState<Message[]>([])
-  const [displayedText, setDisplayedText] = useState('')
-  const [isTypingInitial, setIsTypingInitial] = useState(true)
+  const reduce = useReducedMotion()
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 'welcome', role: 'assistant', content: WELCOME_MESSAGE },
+  ])
   const [inputValue, setInputValue] = useState('')
-  const [isNaiaTyping, setIsNaiaTyping] = useState(false)
-  const [chipsVisible, setChipsVisible] = useState(false)
-  const [responseIndex, setResponseIndex] = useState(0)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [streamingText, setStreamingText] = useState('')
+  const [chipsVisible, setChipsVisible] = useState(true)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const abortRef = useRef<AbortController | null>(null)
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [])
-
+  // Scroll interno del contenedor — nunca afecta el scroll de la página
   useEffect(() => {
-    scrollToBottom()
-  }, [messages, displayedText, isNaiaTyping, scrollToBottom])
+    const el = messagesContainerRef.current
+    if (el) el.scrollTop = el.scrollHeight
+  }, [messages, streamingText])
 
-  // Typewriter on mount
-  useEffect(() => {
-    if (shouldReduceMotion) {
-      setDisplayedText(INITIAL_MESSAGE)
-      setIsTypingInitial(false)
-      setMessages([{ id: 'init', role: 'naia', content: INITIAL_MESSAGE }])
-      setChipsVisible(true)
-      return
+  const sendMessage = useCallback(async (text: string) => {
+    const trimmed = text.trim()
+    if (!trimmed || isStreaming) return
+
+    const userMsg: Message = { id: `u-${Date.now()}`, role: 'user', content: trimmed }
+    const nextMessages = [...messages, userMsg]
+
+    setMessages(nextMessages)
+    setInputValue('')
+    setChipsVisible(false)
+    setIsStreaming(true)
+    setStreamingText('')
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
     }
 
-    let i = 0
-    const timer = setInterval(() => {
-      if (i < INITIAL_MESSAGE.length) {
-        setDisplayedText(INITIAL_MESSAGE.slice(0, i + 1))
-        i++
-      } else {
-        clearInterval(timer)
-        setIsTypingInitial(false)
-        setMessages([{ id: 'init', role: 'naia', content: INITIAL_MESSAGE }])
-        setTimeout(() => setChipsVisible(true), 280)
+    abortRef.current = new AbortController()
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: nextMessages.map(({ role, content }) => ({ role, content })),
+        }),
+        signal: abortRef.current.signal,
+      })
+
+      if (!res.ok || !res.body) {
+        throw new Error('Error en la respuesta')
       }
-    }, 22)
 
-    return () => clearInterval(timer)
-  }, [shouldReduceMotion])
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let full = ''
 
-  const sendMessage = useCallback(
-    (content: string, chipId?: string) => {
-      if (!content.trim()) return
-      setMessages(prev => [...prev, { id: `u-${Date.now()}`, role: 'user', content }])
-      setInputValue('')
-      setChipsVisible(false)
-      setIsNaiaTyping(true)
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        full += decoder.decode(value, { stream: true })
+        setStreamingText(full)
+      }
 
-      // reset textarea height
-      if (textareaRef.current) textareaRef.current.style.height = 'auto'
-
-      setTimeout(
-        () => {
-          const text = chipId
-            ? CHIP_RESPONSES[chipId]
-            : DEFAULT_RESPONSES[responseIndex % DEFAULT_RESPONSES.length]
-          setMessages(prev => [...prev, { id: `n-${Date.now()}`, role: 'naia', content: text }])
-          setIsNaiaTyping(false)
-          setResponseIndex(i => i + 1)
-        },
-        shouldReduceMotion ? 350 : 900 + Math.random() * 500
-      )
-    },
-    [responseIndex, shouldReduceMotion]
-  )
+      setMessages(prev => [
+        ...prev,
+        { id: `a-${Date.now()}`, role: 'assistant', content: full },
+      ])
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name !== 'AbortError') {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: `err-${Date.now()}`,
+            role: 'assistant',
+            content: 'Hubo un problema al conectar con NAIA. Por favor intenta de nuevo.',
+          },
+        ])
+      }
+    } finally {
+      setIsStreaming(false)
+      setStreamingText('')
+    }
+  }, [messages, isStreaming])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -140,43 +142,26 @@ export function ChatInterface() {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value)
     e.target.style.height = 'auto'
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 96)}px`
   }
 
   const bubbleVariants = {
-    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 8, scale: shouldReduceMotion ? 1 : 0.98 },
-    visible: {
-      opacity: 1, y: 0, scale: 1,
-      transition: { duration: shouldReduceMotion ? 0 : 0.26, ease: [0.23, 1, 0.32, 1] },
-    },
+    hidden:  { opacity: 0, y: reduce ? 0 : 8 },
+    visible: { opacity: 1, y: 0, transition: { duration: reduce ? 0 : 0.22 } },
   }
 
-  const isInputDisabled = isNaiaTyping || isTypingInitial
-
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden">
+    <div className="flex flex-col h-full w-full">
 
-      {/* ── Messages: scrollable, no border ── */}
+      {/* ── Messages ── */}
       <div
+        ref={messagesContainerRef}
         role="log"
         aria-live="polite"
         aria-label="Conversación con NAIA"
-        className="flex-1 min-h-0 overflow-y-auto py-2 space-y-4 pr-1 w-full"
+        className="flex-1 min-h-0 overflow-y-auto py-3 space-y-4 pr-1"
         style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(139,92,246,0.2) transparent' }}
       >
-        {/* Typewriter bubble */}
-        {isTypingInitial && (
-          <div className="flex items-start gap-2.5">
-            <NaiaAvatar />
-            <p
-              className="max-w-[88%] text-sm leading-relaxed text-slate-300 pt-1"
-            >
-              {displayedText}
-              <span className="inline-block w-0.5 h-3.5 bg-violet-400 ml-0.5 animate-pulse align-middle" />
-            </p>
-          </div>
-        )}
-
         <AnimatePresence initial={false}>
           {messages.map(msg => (
             <motion.div
@@ -186,10 +171,10 @@ export function ChatInterface() {
               animate="visible"
               className={`flex items-start gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              {msg.role === 'naia' ? <NaiaAvatar /> : <UserAvatar />}
+              {msg.role === 'assistant' ? <NaiaAvatar /> : <UserAvatar />}
               <div
                 className={`max-w-[88%] text-sm leading-relaxed ${
-                  msg.role === 'naia'
+                  msg.role === 'assistant'
                     ? 'text-slate-300 pt-1'
                     : 'px-4 py-2.5 rounded-2xl rounded-tr-sm text-white'
                 }`}
@@ -208,72 +193,33 @@ export function ChatInterface() {
           ))}
         </AnimatePresence>
 
-        {/* Typing indicator */}
-        <AnimatePresence>
-          {isNaiaTyping && (
-            <motion.div
-              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="flex items-center gap-2.5"
-            >
-              <NaiaAvatar />
-              <div className="flex gap-1 pt-1">
+        {/* Streaming bubble */}
+        {isStreaming && (
+          <div className="flex items-start gap-2.5">
+            <NaiaAvatar />
+            {streamingText ? (
+              <p className="max-w-[88%] text-sm leading-relaxed text-slate-300 pt-1">
+                {streamingText}
+                <span className="inline-block w-0.5 h-3.5 bg-violet-400 ml-0.5 animate-pulse align-middle" />
+              </p>
+            ) : (
+              <div className="flex gap-1 pt-2">
                 {[0, 1, 2].map(i => (
                   <motion.span
                     key={i}
                     className="w-1.5 h-1.5 rounded-full bg-violet-500"
-                    animate={shouldReduceMotion ? {} : { y: [0, -5, 0] }}
+                    animate={reduce ? {} : { y: [0, -5, 0] }}
                     transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.18 }}
                   />
                 ))}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </div>
+        )}
 
-        <div ref={messagesEndRef} />
       </div>
 
-      {/* ── Quick Chips ── */}
-      <AnimatePresence>
-        {chipsVisible && messages.length <= 1 && (
-          <motion.div
-            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22, delay: 0.08 }}
-            className="flex-shrink-0 flex flex-wrap gap-2 py-3"
-          >
-            {QUICK_CHIPS.map(({ id, label, Icon }) => (
-              <button
-                key={id}
-                onClick={() => sendMessage(label, id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-violet-300 cursor-pointer"
-                style={{
-                  background: 'rgba(139,92,246,0.07)',
-                  border: '1px solid rgba(139,92,246,0.22)',
-                  transition: 'background 0.18s, border-color 0.18s',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(139,92,246,0.16)'
-                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.45)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(139,92,246,0.07)'
-                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.22)'
-                }}
-              >
-                <Icon size={11} />
-                {label}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Input: minimal floating bar, no heavy box ── */}
+      {/* ── Input area ── */}
       <div className="flex-shrink-0 pt-2">
         {/* Hairline separator */}
         <div
@@ -284,12 +230,13 @@ export function ChatInterface() {
           }}
         />
 
+        {/* Pill input */}
         <form
           onSubmit={handleSubmit}
           className="flex items-end gap-3 rounded-2xl px-4 py-3"
           style={{
             background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.07)',
             backdropFilter: 'blur(12px)',
           }}
         >
@@ -303,34 +250,77 @@ export function ChatInterface() {
                 sendMessage(inputValue)
               }
             }}
-            placeholder="Cuéntame tu caso…"
+            placeholder="Cuéntame sobre tu negocio…"
             aria-label="Escribe tu mensaje a NAIA"
             autoComplete="off"
             rows={1}
-            disabled={isInputDisabled}
-            className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-600 resize-none outline-none min-h-[28px] max-h-[110px] leading-relaxed disabled:opacity-40"
+            disabled={isStreaming}
+            className="flex-1 text-sm resize-none outline-none min-h-[28px] leading-relaxed disabled:opacity-40"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#e2e8f0',
+              WebkitBoxShadow: '0 0 0 1000px transparent inset',
+              boxShadow: '0 0 0 1000px transparent inset',
+              WebkitTextFillColor: '#e2e8f0',
+              caretColor: '#a78bfa',
+            }}
           />
           <button
             type="submit"
-            disabled={!inputValue.trim() || isInputDisabled}
+            disabled={!inputValue.trim() || isStreaming}
             aria-label="Enviar mensaje"
-            className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-25 disabled:cursor-not-allowed"
-            style={{
-              background: 'linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)',
-              touchAction: 'manipulation',
-              transition: 'opacity 0.15s, transform 0.15s',
-            }}
+            className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-150"
+            style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)' }}
             onMouseEnter={e => {
               if (!e.currentTarget.disabled) e.currentTarget.style.transform = 'translateY(-1px)'
             }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            <Send size={13} className="text-white" />
+            <SendIcon sx={{ fontSize: 13 }} className="text-white" />
           </button>
         </form>
 
+        {/* Suggestion chips */}
+        <AnimatePresence>
+          {chipsVisible && (
+            <motion.div
+              initial={{ opacity: 0, y: reduce ? 0 : 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: reduce ? 0 : -4 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-wrap gap-2 mt-3"
+            >
+              {CHIPS.map(({ id, label, Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => sendMessage(label)}
+                  disabled={isStreaming}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-violet-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{
+                    background: 'rgba(139,92,246,0.07)',
+                    border: '1px solid rgba(139,92,246,0.22)',
+                    transition: 'background 0.18s, border-color 0.18s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(139,92,246,0.16)'
+                    e.currentTarget.style.borderColor = 'rgba(139,92,246,0.45)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(139,92,246,0.07)'
+                    e.currentTarget.style.borderColor = 'rgba(139,92,246,0.22)'
+                  }}
+                >
+                  <Icon sx={{ fontSize: 11 }} />
+                  {label}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <p className="text-center text-[10px] text-slate-700 mt-2 tracking-wide">
-          NAIA · Nextflow AI · Respuestas simuladas
+          NAIA · NextFlow AI · Respuestas generadas por IA
         </p>
       </div>
     </div>
