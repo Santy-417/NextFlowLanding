@@ -20,13 +20,13 @@ const inputSx = {
 
 const contactLinks = [
   {
-    href: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP}`,
+    href: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP ?? '573159138270'}`,
     icon: WhatsApp,
     iconColor: '#25D366',
     hoverBorder: '#25D366',
     hoverGlow: 'rgba(37,211,102,0.15)',
     label: 'WhatsApp',
-    detail: process.env.NEXT_PUBLIC_WHATSAPP ?? '3159138270',
+    detail: '+57 315 913 8270',
     external: true,
   },
   {
@@ -37,7 +37,7 @@ const contactLinks = [
     hoverGlow: 'rgba(168,85,247,0.15)',
     label: 'Email',
     detail: 'ainextflow@gmail.com',
-    external: false,
+    external: true,
   },
   {
     href: process.env.NEXT_PUBLIC_INSTAGRAM ?? 'https://instagram.com/nextflowai_',
