@@ -12,11 +12,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **React**: 19
 - **TypeScript**: Strict mode
 - **UI**: Material-UI v6 + Tailwind CSS
+- **Animaciones**: Framer Motion (con soporte para `prefers-reduced-motion`)
+- **3D Graphics**: Spline (`@splinetool/react-spline`) para avatares interactivos
 - **State Management**: TanStack Query v5
 - **Forms**: React Hook Form + Zod
 - **i18n**: next-intl (Español/Inglés)
 - **Email**: Nodemailer
 - **Analytics**: Google Analytics 4 + Meta Pixel
+- **Iconos**: Material-UI Icons + Lucide React
 
 ## Common Commands
 
@@ -25,18 +28,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Servidor de desarrollo en puerto 3000
 
 # Build y producción
-npm run build        # Build de producción
-npm start            # Iniciar servidor de producción
-npm run type-check   # Verificar tipos de TypeScript
+npm run build        # Build de producción (requiere pasar type-check y lint)
+npm start            # Iniciar servidor de producción en puerto 3000
+npm run type-check   # Verificar tipos de TypeScript (strict mode)
 npm run lint         # Ejecutar ESLint
 
 # Deploy con PM2 (Hostinger)
-npm run pm2:start    # Iniciar con PM2
+npm run pm2:start    # Iniciar con PM2 (nombre: "nextflow")
 npm run pm2:restart  # Reiniciar aplicación
 npm run pm2:stop     # Detener aplicación
-npm run pm2:logs     # Ver logs
-npm run pm2:status   # Ver estado
+npm run pm2:logs     # Ver logs en tiempo real
+npm run pm2:status   # Ver estado de todos los procesos PM2
 ```
+
+**NOTA**: El build de producción tiene las siguientes optimizaciones:
+- `removeConsole: true` - Elimina todos los console.log en producción
+- Strict mode de TypeScript habilitado (`noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`)
+- Security headers configurados (X-Frame-Options, CSP, etc.)
 
 ## Arquitectura del Proyecto
 
@@ -69,8 +77,24 @@ Los datos se manejan de forma **estática** en archivos TypeScript para fácil a
 El proyecto usa rutas dinámicas con locale:
 - `/es/*` - Rutas en español (default)
 - `/en/*` - Rutas en inglés
+- `/` - Redirige automáticamente a `/es` (ver `app/page.tsx`)
 
-**next-intl** maneja la internacionalización automáticamente a través de `app/[locale]/layout.tsx`.
+**Arquitectura de layouts con Next.js 15**:
+- `app/layout.tsx` - Layout raíz mínimo (solo pasa children, sin HTML tags)
+- `app/[locale]/layout.tsx` - Layout principal con `<html>` y `<body>`, incluye metadata, next-intl provider
+- **CRÍTICO - Next.js 15 Breaking Change**: `params` es ahora una Promise y DEBE usarse con `await`:
+  ```typescript
+  // ✅ CORRECTO en Next.js 15
+  const { locale } = await params;
+
+  // ❌ INCORRECTO - causará errores
+  const { locale } = params;
+  ```
+
+**next-intl** maneja la internacionalización automáticamente a través de:
+- `middleware.ts` - Middleware que maneja el routing de locales (siempre usa prefijo)
+- `lib/i18n.ts` - Configuración de locales soportados (`['es', 'en']`) y locale default (`'es'`)
+- `app/[locale]/layout.tsx` - Provider de next-intl
 
 ### Theme System
 
@@ -79,8 +103,25 @@ El proyecto usa rutas dinámicas con locale:
   - Primary (Morado): `#8B5CF6`
   - Secondary (Azul): `#3B82F6`
   - Accent (Magenta): `#D946EF` - Usar para CTAs
+  - Hero Background: `#0f0720` - Morado oscuro profundo para HeroSection
+  - Neon Effects: `#b800ff`, `#ff00d4`, `#ff00f7` - Para blobs difuminados
 - **Modo oscuro**: Manejado por Providers con localStorage persistence
 - **Tailwind**: Integrado con MUI, usar utility classes cuando sea apropiado
+
+### Background Effects en NAIASection
+
+La nueva NAIASection (Hero) usa efectos atmosféricos sofisticados:
+- **Spotlight SVG**: Componente reutilizable con blur filter, posicionado en top-left
+  - Animación: fade-in + scale transform (definida en `tailwind.config.ts`)
+  - Fill color: `rgba(139, 92, 246, 0.28)` (morado transparente)
+- **Radial Gradients**: 3 capas de gradientes radiales
+  1. Primer glow: `ellipse 70% 55% at 20% 50%` - morado oscuro (20% opacity)
+  2. Segundo glow: `ellipse 55% 65% at 85% 45%` - magenta (6% opacity)
+  3. Tercer glow (en HeroVisual): `ellipse 60% 70% at 55% 45%` - morado (9% opacity)
+- **Grid Texture**: Pattern lineal 72x72px con `rgba(139,92,246,1)`, 1.6% opacity
+- **Vignettes**: Fade gradients en bottom (30% height) y left (25% width)
+- **Responsive**: Positioning y sizing adaptan con viewport usando `clamp()`
+- **Animación**: Fade-in + slide-up on mount (respeta `prefers-reduced-motion`)
 
 ## Estructura de Componentes
 
@@ -94,13 +135,99 @@ El proyecto usa rutas dinámicas con locale:
 
 Orden de las secciones en la home:
 
-1. **HeroSection** - Hero con título, subtítulo, CTAs principales
+1. **NAIASection** ⭐ (Hero Interactivo) - Chat con IA asistente NAIA + Avatar 3D
+   - **Nuevo (2025)**: Reemplaza la anterior HeroSection con experiencia interactiva
+   - Layout responsivo: chat a la izquierda, avatar 3D a la derecha (full-width en mobile)
+   - Diseño glassmorphism con efectos atmosféricos
+   - Integración con Spline para avatar 3D del personaje NAIA
+   - Chat interactivo con respuestas mocked (sin backend aún)
+   - **Componentes relacionados**:
+     - `components/sections/NAIASection.tsx` - Contenedor principal
+     - `components/sections/hero/ChatInterface.tsx` - Interfaz de chat interactivo
+     - `components/sections/hero/HeroVisual.tsx` - Avatar 3D con efectos
+     - `components/ui/SplineScene.tsx` - Wrapper para Spline 3D
+     - `components/ui/Spotlight.tsx` - Efecto SVG de spotlight animado
 2. **AboutSection** - Equipo (fundadores destacados primero)
 3. **ServicesSection** - Grid de servicios con iconos MUI (destacar n8n)
 4. **ProjectsSection** - Portfolio con filtros por categoría
 5. **ClientsSection** - Logos y casos de éxito
 6. **CTASection** - Call to action para agendar consultoría
 7. **ContactSection** - Formulario de contacto con validación
+
+#### NAIASection - Detalles de Implementación
+
+**Ubicación**: `components/sections/NAIASection.tsx` + subdirectorio `components/sections/hero/`
+
+**Características técnicas**:
+- **Framework**: Next.js 15 (App Router) + React 19
+- **Estilos**: Tailwind CSS + estilos inline con CSS variables
+- **Animaciones**: Framer Motion con soporte para `prefers-reduced-motion`
+- **Diseño**: Glassmorphism con `backdrop-filter: blur(12px)`
+- **Responsive**: Usa `clamp()` para tipografía y espaciado (sin breakpoints hardcodeados)
+- **Altura**: `100dvh` (100% dynamic viewport height)
+- **Dark mode**: Background `#030303`, colores morados/magentas del branding
+
+**Componentes y responsabilidades**:
+
+1. **ChatInterface** (`components/sections/hero/ChatInterface.tsx`)
+   - Interfaz de chat completamente funcional
+   - Efectos: Typewriter inicial, burbujas animadas, typing indicator
+   - Quick action chips: e-commerce, sales, support (con respuestas contextuales)
+   - Textarea con auto-resize (max-height: 120px)
+   - Envío con Enter key o click en botón
+   - **Accessibilidad**: `aria-live="polite"`, `aria-label` en botones/inputs, semantic HTML
+   - **Respuestas mocked**:
+     - CHIP_RESPONSES: Respuestas específicas por categoría seleccionada
+     - DEFAULT_RESPONSES: Rotación de 4 respuestas genéricas
+   - **Avatar NAIA**: Gradiente `linear-gradient(135deg, #7C3AED, #C026D3)` con glow
+   - **Avatar Usuario**: Fondo gris sutil con badge "TÚ"
+
+2. **HeroVisual** (`components/sections/hero/HeroVisual.tsx`)
+   - Container para el avatar 3D Spline
+   - Glow atmosférico detrás del personaje (radial gradient morado)
+   - Vignettes para blend suave con fondos:
+     - Bottom: fade to `#030303`
+     - Left: fade to `#030303`
+   - Label NAIA flotante con:
+     - Text gradient: `linear-gradient(135deg, #A78BFA 0%, #F0ABFC 50%, #67E8F9 100%)`
+     - Subtítulo: "Nextflow AI Assistant"
+
+3. **SplineScene** (`components/ui/SplineScene.tsx`)
+   - Wrapper lazy-loaded para `@splinetool/react-spline`
+   - Suspense fallback durante carga
+   - Props: `scene` (URL), `className` (opcional)
+   - Escena actual: `https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode`
+
+4. **Spotlight** (`components/ui/Spotlight.tsx`)
+   - Componente SVG con blur filter
+   - Animación CSS: fade-in + scale transform
+   - Props: `className` (posición), `fill` (color)
+   - Keyframe definido en `tailwind.config.ts`: `spotlight` animation
+
+**Efectos visuales**:
+- Atmosféricos: 3 capas de radial gradients con colores morados/rosas
+- Grid texture: 72x72px, 1.6% opacity para patrón sutil
+- Spotlight SVG: Posicionado en top-left con animation
+- Vignettes: Gradientes lineales en bottom y left para blending
+- Animación de entrada: Fade + slide up (respeta prefers-reduced-motion)
+
+**Responsive design**:
+```
+Mobile (xs):
+- Chat: full-width, flex-1 min-h-0
+- Avatar: hidden
+
+Desktop (lg+):
+- Chat: 50% width (lg:w-1/2)
+- Avatar: 50% width (flex-1)
+- Ambas columnas: 100dvh height
+```
+
+**Tipografía responsiva**:
+- Headline: `clamp(1.5rem, 3.5vw, 2.75rem)`
+- Subtitle: `clamp(0.8rem, 1.2vw, 0.95rem)`
+- Padding top: `clamp(3.5rem, 8vh, 5rem)`
+- Padding left/right: `clamp(1.5rem, 5vw, 3rem)`
 
 ### UI Components
 
@@ -162,9 +289,21 @@ trackEvent('whatsapp_click', { source: 'floating_button' });
 
 ## Patrones de Código
 
+### TypeScript Configuration
+
+El proyecto usa **TypeScript strict mode** con reglas estrictas:
+- `strict: true` - Modo estricto completo
+- `noUnusedLocals: true` - No permite variables locales sin usar
+- `noUnusedParameters: true` - No permite parámetros sin usar
+- `noImplicitReturns: true` - Todas las rutas deben retornar un valor
+- `noFallthroughCasesInSwitch: true` - Previene fall-through en switches
+- `forceConsistentCasingInFileNames: true` - Nombres de archivos case-sensitive
+
+**IMPORTANTE**: Siempre ejecutar `npm run type-check` antes de commit.
+
 ### Import Paths
 
-Usar alias `@/` para imports:
+Usar alias `@/` para imports (configurado en `tsconfig.json`):
 
 ```typescript
 import { Button } from '@/components/ui/Button';
@@ -186,10 +325,17 @@ const { elementRef, isVisible } = useScrollAnimation({ triggerOnce: true });
 
 ### Componentes Client vs Server
 
-- **Server Components** (default): Páginas, layouts
-- **Client Components** (`'use client'`): Interactividad, hooks, estado
+- **Server Components** (default): Páginas, layouts, componentes estáticos
+- **Client Components** (`'use client'`): Interactividad, hooks, estado, event handlers
 
 **Regla**: Solo agregar `'use client'` cuando sea necesario (hooks, eventos, estado).
+
+**Ejemplos de cuándo usar Client Components**:
+- Componentes que usan `useState`, `useEffect`, `useContext`
+- Componentes con event handlers (`onClick`, `onChange`, etc.)
+- Componentes que usan hooks de next-intl (`useTranslations`, `useLocale`)
+- Componentes que usan hooks personalizados (`useScrollAnimation`, `useContactForm`)
+- Componentes de MUI que requieren interactividad (Modal, Dialog, etc.)
 
 ## Imágenes y Assets
 
@@ -319,15 +465,43 @@ Asegurar que `.env.local` en el servidor tenga:
 - IDs de analytics configurados
 - Info de redes sociales
 
+## Security & Performance
+
+### Security Headers (next.config.js)
+
+El proyecto incluye headers de seguridad configurados:
+- `X-DNS-Prefetch-Control: on` - Mejora performance de DNS
+- `X-Frame-Options: SAMEORIGIN` - Previene clickjacking
+- `X-Content-Type-Options: nosniff` - Previene MIME type sniffing
+- `Referrer-Policy: origin-when-cross-origin` - Control de referrer
+
+### Image Optimization
+
+Configurado en `next.config.js`:
+- Formatos: AVIF y WebP para mejor compresión
+- Device sizes: Optimizado para múltiples dispositivos
+- Image sizes: 16px a 384px para diferentes usos
+
+**Uso**: Siempre usar el componente `next/image` en lugar de `<img>` tags.
+
+### Build Optimizations
+
+- **Production**: `removeConsole: true` elimina todos los console.log
+- **React Strict Mode**: Habilitado para detectar problemas
+- **TypeScript**: Build falla si hay errores de tipo
+- **ESLint**: Build falla si hay errores de linting
+
 ## SEO
 
 El proyecto incluye:
-- Meta tags optimizados en `app/layout.tsx`
+- Meta tags optimizados en `app/[locale]/layout.tsx` (no en `app/layout.tsx`)
 - Open Graph tags para redes sociales
 - Sitemap en `public/robots.txt`
 - `robots.txt` configurado
 
 **Imagen OG**: Debe existir en `public/images/og-image.jpg` (1200x630px)
+
+**NOTA**: Con la arquitectura de i18n, los metadata están en el layout del locale, no en el layout raíz.
 
 ## Debugging
 
@@ -387,6 +561,25 @@ npm run build
 npm run pm2:logs
 ```
 
+### Error: Locale no detectado / Redirección incorrecta
+
+Verificar que `middleware.ts` esté configurado correctamente:
+- El middleware debe exportar el matcher que excluya `api`, `_next`, archivos estáticos
+- `localePrefix: 'always'` asegura que todas las rutas tengan el prefijo de locale
+- Verificar que `lib/i18n.ts` exporte correctamente `locales` y `defaultLocale`
+
+### Error: `params` is not defined o type error con params
+
+En Next.js 15, `params` es una Promise. Asegurarse de usar `await`:
+
+```typescript
+// En cualquier page.tsx o layout.tsx
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  // ...
+}
+```
+
 ## Team Information
 
 **Equipo NextFlow** (actualizar en `data/team.ts` si cambia):
@@ -401,11 +594,12 @@ npm run pm2:logs
 
 ## Contacto y Redes Sociales
 
-- WhatsApp: 3003214043
+- WhatsApp: 3159138270
 - TikTok: @next.flow.ai
 - Instagram: @nextflowai_
-- Email: contacto@nextflow.com (configurar)
+- Email: ainextflow@gmail.com
+ (configurar)
 
 ---
 
-**Última actualización**: 2025-01-27
+**Última actualización**: 2025-11-28

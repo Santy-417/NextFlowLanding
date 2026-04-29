@@ -10,7 +10,7 @@ export default function NotFound() {
           Lo sentimos, la página que buscas no existe.
         </p>
         <Link
-          href="/es"
+          href="/"
           className="inline-block bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors"
         >
           Volver al inicio
