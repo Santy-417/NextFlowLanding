@@ -1,10 +1,4 @@
 import OpenAI from 'openai'
-import { headers } from 'next/headers'
-
-// In-memory rate limit: max 15 requests per IP per 3 hours
-const ipMap = new Map<string, { count: number; resetAt: number }>()
-const IP_LIMIT = 15
-const IP_WINDOW_MS = 3 * 60 * 60 * 1000
 
 const SYSTEM_PROMPT = `Eres NAIA, la asistente de inteligencia artificial de NextFlow. Tu único propósito es ayudar a los visitantes a entender cómo NextFlow puede transformar sus negocios con automatización e IA. No debes responder preguntas que no estén relacionadas con NextFlow y sus servicios — si alguien pregunta algo fuera de contexto, redirige amablemente la conversación hacia sus necesidades de negocio.
 
@@ -61,23 +55,6 @@ Muchas personas creen que la IA resuelve todo de forma autónoma sin intervenci�
 
 export async function POST(req: Request) {
   try {
-    const headersList = await headers()
-    const ip =
-      headersList.get('x-forwarded-for')?.split(',')[0].trim() ??
-      headersList.get('x-real-ip') ??
-      'unknown'
-
-    const now = Date.now()
-    const entry = ipMap.get(ip)
-    if (entry && now < entry.resetAt) {
-      if (entry.count >= IP_LIMIT) {
-        return new Response('Límite de mensajes alcanzado', { status: 429 })
-      }
-      entry.count++
-    } else {
-      ipMap.set(ip, { count: 1, resetAt: now + IP_WINDOW_MS })
-    }
-
     const { messages } = await req.json()
 
     if (!process.env.OPENAI_API_KEY) {

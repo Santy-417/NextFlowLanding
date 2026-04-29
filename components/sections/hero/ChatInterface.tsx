@@ -21,42 +21,20 @@ const WELCOME_MESSAGE =
   'Hola, soy NAIA — la IA consultora de NextFlow. ¿En qué proceso de tu negocio puedo ayudarte hoy?'
 
 const MESSAGE_LIMIT = 10
-const COOLDOWN_MS = 3 * 60 * 60 * 1000 // 3 horas
-const STORAGE_KEY = 'naia_usage'
+const STORAGE_KEY = 'naia_count'
 
-interface StoredUsage {
-  count: number
-  since: number
-}
-
-function getUsage(): StoredUsage {
+function getCount(): number {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { count: 0, since: Date.now() }
-    const parsed = JSON.parse(raw) as StoredUsage
-    if (Date.now() - parsed.since >= COOLDOWN_MS) {
-      localStorage.removeItem(STORAGE_KEY)
-      return { count: 0, since: Date.now() }
-    }
-    return parsed
+    return parseInt(sessionStorage.getItem(STORAGE_KEY) ?? '0', 10)
   } catch {
-    return { count: 0, since: Date.now() }
+    return 0
   }
 }
 
-function incrementUsage(current: StoredUsage): StoredUsage {
-  const next = { count: current.count + 1, since: current.since }
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch { /* noop */ }
+function incrementCount(current: number): number {
+  const next = current + 1
+  try { sessionStorage.setItem(STORAGE_KEY, String(next)) } catch { /* noop */ }
   return next
-}
-
-function formatTimeLeft(since: number): string {
-  const ms = COOLDOWN_MS - (Date.now() - since)
-  if (ms <= 0) return ''
-  const h = Math.floor(ms / 3600000)
-  const m = Math.floor((ms % 3600000) / 60000)
-  if (h > 0) return `${h}h ${m}min`
-  return `${m} min`
 }
 
 const CHIPS = [
@@ -100,16 +78,16 @@ export function ChatInterface() {
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingText, setStreamingText] = useState('')
   const [chipsVisible, setChipsVisible] = useState(true)
-  const [usage, setUsage] = useState<StoredUsage>({ count: 0, since: Date.now() })
+  const [msgCount, setMsgCount] = useState(0)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const abortRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
-    setUsage(getUsage())
+    setMsgCount(getCount())
   }, [])
 
-  const isBlocked = usage.count >= MESSAGE_LIMIT
+  const isBlocked = msgCount >= MESSAGE_LIMIT
 
   // Scroll interno del contenedor — nunca afecta el scroll de la página
   useEffect(() => {
@@ -124,8 +102,7 @@ export function ChatInterface() {
     const userMsg: Message = { id: `u-${Date.now()}`, role: 'user', content: trimmed }
     const nextMessages = [...messages, userMsg]
 
-    const nextUsage = incrementUsage(usage)
-    setUsage(nextUsage)
+    setMsgCount(prev => incrementCount(prev))
 
     setMessages(nextMessages)
     setInputValue('')
@@ -304,9 +281,7 @@ export function ChatInterface() {
                 Has llegado al límite de mensajes
               </p>
               <p className="text-xs text-slate-500">
-                {formatTimeLeft(usage.since)
-                  ? `El chat se reactiva en ${formatTimeLeft(usage.since)}`
-                  : 'Agenda una llamada y resolvemos todas tus dudas.'}
+                Agenda una llamada y resolvemos todas tus dudas.
               </p>
             </div>
             <button
