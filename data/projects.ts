@@ -65,30 +65,6 @@ export const projects: Project[] = [
     featured: false,
     order: 5,
   },
-  {
-    id: 'delivery-app',
-    name: 'App de Delivery y Logística',
-    description: 'Aplicación móvil para gestión de entregas con tracking en tiempo real y optimización de rutas.',
-    howItWorks: 'App nativa con geolocalización, notificaciones push, sistema de tracking GPS y algoritmos de optimización de rutas.',
-    problemSolved: 'Gestión eficiente de entregas con visibilidad completa del proceso y reducción de tiempos de entrega.',
-    technologies: ['React Native', 'Firebase', 'Google Maps API', 'Node.js', 'MongoDB'],
-    image: '/images/projects/delivery-app.jpg',
-    category: 'mobile',
-    featured: true,
-    order: 6,
-  },
-  {
-    id: 'fitness-tracker',
-    name: 'App de Fitness y Seguimiento Personal',
-    description: 'Aplicación móvil para seguimiento de ejercicios, nutrición y progreso fitness con IA.',
-    howItWorks: 'App multiplataforma con sincronización de dispositivos wearables, análisis con IA de hábitos y recomendaciones personalizadas.',
-    problemSolved: 'Seguimiento integral de salud y fitness con análisis inteligente y motivación personalizada.',
-    technologies: ['Flutter', 'TensorFlow', 'HealthKit', 'Firebase', 'Python'],
-    image: '/images/projects/fitness-app.jpg',
-    category: 'mobile',
-    featured: false,
-    order: 7,
-  },
 ];
 
 /**
