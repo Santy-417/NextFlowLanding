@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Box, Button, Container, Grid, Typography, Card, CardContent } from '@mui/material';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
@@ -17,7 +16,7 @@ import LinesBackground from '@/components/ui/LinesBackground';
  */
 
 export default function HeroSection() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [_isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function HeroSection() {
   }, []);
 
   const handleCTAClick = () => {
-    const contactSection = document.getElementById('contact-section');
+    const contactSection = document.getElementById('contact');
     if (contactSection) {
       contactSection.scrollIntoView({
         behavior: 'smooth',
