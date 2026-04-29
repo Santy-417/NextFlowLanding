@@ -321,7 +321,7 @@ export default function ContactSection() {
               {/* WhatsApp */}
               <Box
                 component="a"
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP}`}
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP ?? '573159138270'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{
@@ -344,7 +344,7 @@ export default function ContactSection() {
                 <Box>
                   <Typography sx={{ color: '#FFFFFF', fontWeight: 600, mb: 0.5 }}>WhatsApp</Typography>
                   <Typography sx={{ color: '#9CA3AF', fontSize: '0.9rem' }}>
-                    {process.env.NEXT_PUBLIC_WHATSAPP}
+                    +57 315 913 8270
                   </Typography>
                 </Box>
               </Box>
