@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Box, Container, Typography, TextField, Button, Grid, Alert } from '@mui/material';
-import { WhatsApp, Email, Instagram, Send } from '@mui/icons-material';
+import { WhatsApp, Email, Instagram, Send, ContentCopy, Check } from '@mui/icons-material';
 import { useContactForm } from '@/hooks/useContactForm';
+
+const EMAIL = 'ainextflow@gmail.com';
 
 const inputSx = {
   '& .MuiOutlinedInput-root': {
@@ -18,7 +21,7 @@ const inputSx = {
   '& .MuiInputLabel-root.Mui-focused': { color: '#A855F7' },
 };
 
-const contactLinks = [
+const linkContacts = [
   {
     href: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP ?? '573159138270'}`,
     icon: WhatsApp,
@@ -27,17 +30,6 @@ const contactLinks = [
     hoverGlow: 'rgba(37,211,102,0.15)',
     label: 'WhatsApp',
     detail: '+57 315 913 8270',
-    external: true,
-  },
-  {
-    href: 'mailto:ainextflow@gmail.com',
-    icon: Email,
-    iconColor: '#A855F7',
-    hoverBorder: '#A855F7',
-    hoverGlow: 'rgba(168,85,247,0.15)',
-    label: 'Email',
-    detail: 'ainextflow@gmail.com',
-    external: true,
   },
   {
     href: process.env.NEXT_PUBLIC_INSTAGRAM ?? 'https://instagram.com/nextflowai_',
@@ -47,12 +39,39 @@ const contactLinks = [
     hoverGlow: 'rgba(232,121,249,0.15)',
     label: 'Instagram',
     detail: '@nextflowai_',
-    external: true,
   },
 ];
 
 export default function ContactSection() {
   const { register, handleSubmit, errors, formState } = useContactForm();
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  const handleCopyEmail = () => {
+    const copy = () => {
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2000);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(EMAIL).then(copy).catch(() => {
+        // fallback para navegadores sin permisos de clipboard
+        const el = document.createElement('textarea');
+        el.value = EMAIL;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        copy();
+      });
+    } else {
+      const el = document.createElement('textarea');
+      el.value = EMAIL;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      copy();
+    }
+  };
 
   return (
     <section
@@ -288,12 +307,68 @@ export default function ContactSection() {
                 Otras formas de contacto
               </Typography>
 
-              {contactLinks.map(({ href, icon: Icon, iconColor, hoverBorder, hoverGlow, label, detail, external }) => (
+              {/* Email — copia al portapapeles */}
+              <Box
+                component="button"
+                onClick={handleCopyEmail}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  p: 2.5,
+                  mb: 2,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: emailCopied ? '1px solid #A855F7' : '1px solid rgba(255,255,255,0.09)',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                  boxShadow: emailCopied ? '0 8px 24px rgba(168,85,247,0.15)' : 'none',
+                  '&:hover': {
+                    borderColor: '#A855F7',
+                    boxShadow: '0 8px 24px rgba(168,85,247,0.15)',
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.05)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 2,
+                    flexShrink: 0,
+                  }}
+                >
+                  <Email sx={{ color: '#A855F7', fontSize: '22px' }} />
+                </Box>
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography sx={{ color: '#FFFFFF', fontWeight: 600, fontSize: '0.9rem', mb: 0.25 }}>
+                    Email
+                  </Typography>
+                  <Typography sx={{ color: emailCopied ? '#A855F7' : '#9CA3AF', fontSize: '0.825rem', transition: 'color 0.2s' }}>
+                    {emailCopied ? '¡Correo copiado!' : EMAIL}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
+                  {emailCopied
+                    ? <Check sx={{ fontSize: '18px', color: '#A855F7' }} />
+                    : <ContentCopy sx={{ fontSize: '16px', color: 'rgba(156,163,175,0.5)' }} />
+                  }
+                </Box>
+              </Box>
+
+              {/* WhatsApp e Instagram — links externos */}
+              {linkContacts.map(({ href, icon: Icon, iconColor, hoverBorder, hoverGlow, label, detail }) => (
                 <Box
                   key={label}
                   component="a"
                   href={href}
-                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
