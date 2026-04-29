@@ -8,6 +8,8 @@ import GroupIcon from '@mui/icons-material/Group'
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
+import LockIcon from '@mui/icons-material/Lock'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 
 interface Message {
   id: string
@@ -17,6 +19,45 @@ interface Message {
 
 const WELCOME_MESSAGE =
   'Hola, soy NAIA — la IA consultora de NextFlow. ¿En qué proceso de tu negocio puedo ayudarte hoy?'
+
+const MESSAGE_LIMIT = 10
+const COOLDOWN_MS = 3 * 60 * 60 * 1000 // 3 horas
+const STORAGE_KEY = 'naia_usage'
+
+interface StoredUsage {
+  count: number
+  since: number
+}
+
+function getUsage(): StoredUsage {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return { count: 0, since: Date.now() }
+    const parsed = JSON.parse(raw) as StoredUsage
+    if (Date.now() - parsed.since >= COOLDOWN_MS) {
+      localStorage.removeItem(STORAGE_KEY)
+      return { count: 0, since: Date.now() }
+    }
+    return parsed
+  } catch {
+    return { count: 0, since: Date.now() }
+  }
+}
+
+function incrementUsage(current: StoredUsage): StoredUsage {
+  const next = { count: current.count + 1, since: current.since }
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch { /* noop */ }
+  return next
+}
+
+function formatTimeLeft(since: number): string {
+  const ms = COOLDOWN_MS - (Date.now() - since)
+  if (ms <= 0) return ''
+  const h = Math.floor(ms / 3600000)
+  const m = Math.floor((ms % 3600000) / 60000)
+  if (h > 0) return `${h}h ${m}min`
+  return `${m} min`
+}
 
 const CHIPS = [
   { id: 'ecommerce', label: 'Automatizar e-commerce',       Icon: ShoppingCartIcon },
@@ -59,9 +100,16 @@ export function ChatInterface() {
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingText, setStreamingText] = useState('')
   const [chipsVisible, setChipsVisible] = useState(true)
+  const [usage, setUsage] = useState<StoredUsage>({ count: 0, since: Date.now() })
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const abortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    setUsage(getUsage())
+  }, [])
+
+  const isBlocked = usage.count >= MESSAGE_LIMIT
 
   // Scroll interno del contenedor — nunca afecta el scroll de la página
   useEffect(() => {
@@ -71,10 +119,13 @@ export function ChatInterface() {
 
   const sendMessage = useCallback(async (text: string) => {
     const trimmed = text.trim()
-    if (!trimmed || isStreaming) return
+    if (!trimmed || isStreaming || isBlocked) return
 
     const userMsg: Message = { id: `u-${Date.now()}`, role: 'user', content: trimmed }
     const nextMessages = [...messages, userMsg]
+
+    const nextUsage = incrementUsage(usage)
+    setUsage(nextUsage)
 
     setMessages(nextMessages)
     setInputValue('')
@@ -230,8 +281,53 @@ export function ChatInterface() {
           }}
         />
 
+        {/* Blocked state */}
+        {isBlocked && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col items-center gap-3 py-4 px-4 rounded-2xl text-center"
+            style={{
+              background: 'rgba(139,92,246,0.07)',
+              border: '1px solid rgba(139,92,246,0.2)',
+            }}
+          >
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(139,92,246,0.15)' }}
+            >
+              <LockIcon sx={{ fontSize: 17 }} style={{ color: '#a78bfa' }} />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-200 mb-0.5">
+                Has llegado al límite de mensajes
+              </p>
+              <p className="text-xs text-slate-500">
+                {formatTimeLeft(usage.since)
+                  ? `El chat se reactiva en ${formatTimeLeft(usage.since)}`
+                  : 'Agenda una llamada y resolvemos todas tus dudas.'}
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                const el = document.getElementById('contact')
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white"
+              style={{
+                background: 'linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)',
+                boxShadow: '0 0 20px rgba(139,92,246,0.35)',
+              }}
+            >
+              <CalendarMonthIcon sx={{ fontSize: 15 }} />
+              Agenda tu consultoría gratuita
+            </button>
+          </motion.div>
+        )}
+
         {/* Pill input */}
-        <form
+        {!isBlocked && <form
           onSubmit={handleSubmit}
           className="flex items-end gap-3 rounded-2xl px-4 py-3"
           style={{
@@ -279,11 +375,11 @@ export function ChatInterface() {
           >
             <SendIcon sx={{ fontSize: 13 }} className="text-white" />
           </button>
-        </form>
+        </form>}
 
         {/* Suggestion chips */}
         <AnimatePresence>
-          {chipsVisible && (
+          {!isBlocked && chipsVisible && (
             <motion.div
               initial={{ opacity: 0, y: reduce ? 0 : 6 }}
               animate={{ opacity: 1, y: 0 }}
