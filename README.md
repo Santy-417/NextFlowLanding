@@ -138,14 +138,15 @@ SMTP_SECURE=false
 SMTP_USER=tu-email@gmail.com
 SMTP_PASSWORD=tu-contraseña-de-aplicacion
 EMAIL_FROM=nextflow@tudominio.com
-EMAIL_TO=contacto@nextflow.com
+EMAIL_TO=ainextflow@gmail.com
+
 
 # Analytics
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 NEXT_PUBLIC_META_PIXEL_ID=
 
 # Social
-NEXT_PUBLIC_WHATSAPP=3003214043
+NEXT_PUBLIC_WHATSAPP=3159138270
 NEXT_PUBLIC_TIKTOK=https://www.tiktok.com/@next.flow.ai
 NEXT_PUBLIC_INSTAGRAM=https://www.instagram.com/nextflowai_
 ```
@@ -479,10 +480,11 @@ El sitio incluye:
 
 ## Contacto
 
-- **WhatsApp**: [3003214043](https://wa.me/3003214043)
+- **WhatsApp**: [3159138270](https://wa.me/3159138270)
 - **TikTok**: [@next.flow.ai](https://www.tiktok.com/@next.flow.ai)
 - **Instagram**: [@nextflowai_](https://www.instagram.com/nextflowai_)
-- **Email**: contacto@nextflow.com
+- **Email**: ainextflow@gmail.com
+
 
 ---
 

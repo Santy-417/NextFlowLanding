@@ -594,10 +594,11 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
 ## Contacto y Redes Sociales
 
-- WhatsApp: 3003214043
+- WhatsApp: 3159138270
 - TikTok: @next.flow.ai
 - Instagram: @nextflowai_
-- Email: contacto@nextflow.com (configurar)
+- Email: ainextflow@gmail.com
+ (configurar)
 
 ---
 
