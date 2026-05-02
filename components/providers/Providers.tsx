@@ -6,8 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { darkTheme } from '@/lib/theme';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import WhatsAppButton from '@/components/ui/WhatsAppButton';
-
 interface ProvidersProps {
   children: ReactNode;
 }
@@ -28,7 +26,6 @@ export default function Providers({ children }: ProvidersProps) {
       <Header />
       {children}
       <Footer />
-      <WhatsAppButton />
     </MuiThemeProvider>
   );
 }

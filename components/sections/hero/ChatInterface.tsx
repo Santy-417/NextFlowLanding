@@ -391,7 +391,7 @@ export function ChatInterface() {
         </AnimatePresence>
 
         <p className="text-center text-[10px] text-slate-700 mt-2 tracking-wide">
-          NAIA · NextFlow AI · Respuestas generadas por IA
+          NAIA · NextFlow AI Assistant
         </p>
       </div>
     </div>

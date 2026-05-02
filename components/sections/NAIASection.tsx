@@ -12,7 +12,7 @@ export function NAIASection() {
     <section
       id="hero-section"
       aria-label="Hero — NAIA Chat"
-      style={{ background: '#09090f', colorScheme: 'dark', position: 'relative' }}
+      style={{ background: '#0e0e14', colorScheme: 'dark', position: 'relative' }}
     >
       {/* ── Background effects ── */}
       <div

@@ -20,7 +20,7 @@ export default function CTASection() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#09090f',
+        background: '#0e0e14',
         paddingTop: '100px',
         paddingBottom: '100px',
         overflow: 'hidden',
@@ -74,7 +74,7 @@ export default function CTASection() {
           right: 0,
           height: '25%',
           background:
-            'linear-gradient(to bottom, rgba(9,9,15,1) 0%, rgba(9,9,15,0.6) 40%, transparent 100%)',
+            'linear-gradient(to bottom, rgba(14,14,20,1) 0%, rgba(14,14,20,0.6) 40%, transparent 100%)',
           pointerEvents: 'none',
           zIndex: 1,
         }}
@@ -90,7 +90,7 @@ export default function CTASection() {
           right: 0,
           height: '25%',
           background:
-            'linear-gradient(to bottom, transparent 0%, rgba(9,9,15,0.6) 60%, rgba(9,9,15,1) 100%)',
+            'linear-gradient(to bottom, transparent 0%, rgba(14,14,20,0.6) 60%, rgba(14,14,20,1) 100%)',
           pointerEvents: 'none',
           zIndex: 1,
         }}

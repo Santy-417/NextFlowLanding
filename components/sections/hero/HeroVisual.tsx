@@ -57,7 +57,7 @@ export function HeroVisual() {
           <radialGradient id="naia-halo" cx="50%" cy="50%" r="50%">
             <stop offset="0%"   stopColor="#8B5CF6" stopOpacity="0.20" />
             <stop offset="55%"  stopColor="#D946EF" stopOpacity="0.07" />
-            <stop offset="100%" stopColor="#030303" stopOpacity="0" />
+            <stop offset="100%" stopColor="#0e0e14" stopOpacity="0" />
           </radialGradient>
 
           {/* Label gradient */}
@@ -248,13 +248,13 @@ export function HeroVisual() {
       <div
         aria-hidden="true"
         className="absolute inset-y-0 left-0 pointer-events-none"
-        style={{ width: '22%', background: 'linear-gradient(to right, #030303 0%, transparent 100%)' }}
+        style={{ width: '22%', background: 'linear-gradient(to right, #0e0e14 0%, transparent 100%)' }}
       />
       {/* Bottom vignette */}
       <div
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 pointer-events-none"
-        style={{ height: '15%', background: 'linear-gradient(to top, #030303 0%, transparent 100%)' }}
+        style={{ height: '15%', background: 'linear-gradient(to top, #0e0e14 0%, transparent 100%)' }}
       />
     </motion.div>
   )

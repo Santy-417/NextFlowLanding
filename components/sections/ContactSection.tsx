@@ -80,7 +80,7 @@ export default function ContactSection() {
         position: 'relative',
         width: '100%',
         minHeight: '100vh',
-        background: '#09090f',
+        background: '#0e0e14',
         paddingTop: '100px',
         paddingBottom: '100px',
       }}

@@ -28,7 +28,7 @@ const nextFlowColors = {
 const getCommonTheme = (): ThemeOptions => ({
   typography: {
     fontFamily: [
-      'Inter',
+      'var(--font-manrope)',
       '-apple-system',
       'BlinkMacSystemFont',
       '"Segoe UI"',
@@ -169,8 +169,8 @@ export const darkTheme = createTheme({
     primary: nextFlowColors.primary,
     secondary: nextFlowColors.secondary,
     background: {
-      default: '#09090f',
-      paper: '#0f0f1a',
+      default: '#0e0e14',
+      paper: '#1b1b21',
     },
     text: {
       primary: '#F1F5F9',

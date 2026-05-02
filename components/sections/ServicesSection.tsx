@@ -16,7 +16,7 @@ export default function ServicesSection() {
         position: 'relative',
         width: '100%',
         minHeight: '100vh',
-        background: '#09090f',
+        background: '#0e0e14',
         paddingTop: '100px',
         paddingBottom: '100px',
       }}
@@ -124,6 +124,7 @@ export default function ServicesSection() {
                         : '1px solid rgba(255,255,255,0.08)',
                       borderRadius: '16px',
                       height: '100%',
+                      overflow: 'hidden',
                       transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
                       '&:hover': {
                         transform: 'translateY(-6px)',
@@ -134,9 +135,46 @@ export default function ServicesSection() {
                           ? 'rgba(168,85,247,0.5)'
                           : 'rgba(255,255,255,0.15)',
                       },
+                      '&:hover .service-img': {
+                        transform: 'scale(1.05)',
+                      },
                     }}
                   >
-                    <CardContent sx={{ p: 4 }}>
+                    {/* Imagen */}
+                    {service.image && (
+                      <Box sx={{ position: 'relative', height: '160px', overflow: 'hidden', background: '#0d0c18', flexShrink: 0 }}>
+                        <Box
+                          component="img"
+                          src={service.image}
+                          alt={service.title}
+                          className="service-img"
+                          sx={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center',
+                            display: 'block',
+                            transition: 'transform 0.5s ease',
+                          }}
+                        />
+                        <Box sx={{
+                          position: 'absolute', inset: 0,
+                          background: 'linear-gradient(to top, rgba(14,14,20,0.8) 0%, transparent 60%)',
+                        }} />
+                        {service.highlighted && (
+                          <Box sx={{
+                            position: 'absolute', top: 10, right: 10,
+                            fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em',
+                            textTransform: 'uppercase', color: '#fff',
+                            background: 'linear-gradient(135deg, #A855F7, #E879F9)',
+                            px: 1, py: 0.25, borderRadius: '4px',
+                          }}>
+                            DESTACADO
+                          </Box>
+                        )}
+                      </Box>
+                    )}
+                    <CardContent sx={{ p: 3 }}>
                       {/* Icono */}
                       <Box
                         sx={{

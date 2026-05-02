@@ -1,42 +1,37 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Box, Container, Grid, Typography } from '@mui/material';
 
 const FOUNDERS = [
   {
     name: 'Santiago Chavarro',
     role: 'Co-fundador & CEO',
-    badge: 'CO-FUNDADOR',
+    badges: [
+      { label: 'Co-fundador', color: '#d0bcff', bg: 'rgba(160,120,255,0.15)', border: 'rgba(160,120,255,0.3)' },
+      { label: 'CEO', color: '#fbabff', bg: 'rgba(217,70,239,0.12)', border: 'rgba(217,70,239,0.3)' },
+    ],
     description:
-      'Santiago diseña sistemas antes de escribir una línea de código. Su enfoque en arquitectura limpia y escalable convierte ideas complejas en productos que funcionan bajo presión.',
+      'Estratega visionario que diseña sistemas antes de escribir una línea de código. Su enfoque en arquitectura limpia convierte ideas complejas en productos que funcionan bajo presión y escalan sin fricción.',
     image: '/images/FotoSantiago.png',
-    accent: '#E879F9',
-    glowColor: 'rgba(232,121,249,0.22)',
-    glowColor2: 'rgba(168,85,247,0.1)',
-    badgeBg: 'rgba(232,121,249,0.08)',
-    badgeBorder: 'rgba(232,121,249,0.22)',
-    separatorFrom: '#E879F9',
-    photoSide: 'left' as const,
-    animX: -40,
-    delay: 0.1,
+    accentColor: '#D946EF',
+    accentGradient: 'linear-gradient(90deg, #A855F7, #D946EF)',
+    overlayFrom: '#0e0e14',
+    delay: 0.05,
   },
   {
     name: 'Samuel Aristizabal',
     role: 'Co-fundador & CTO',
-    badge: 'CO-FUNDADOR',
+    badges: [
+      { label: 'Co-fundador', color: '#d0bcff', bg: 'rgba(160,120,255,0.15)', border: 'rgba(160,120,255,0.3)' },
+      { label: 'CTO', color: '#adc6ff', bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.3)' },
+    ],
     description:
-      'Samuel convierte requerimientos difusos en sistemas estables. Desde automatizaciones en n8n hasta plataformas full-stack, siempre prioriza lo que mueve la aguja.',
+      'Arquitecto de sistemas obsesionado con la optimización a nivel de núcleo. Samuel lidera el desarrollo técnico de NextFlow, convirtiendo requerimientos difusos en sistemas estables y resilientes.',
     image: '/images/FotoSamuFull.png',
-    accent: '#06B6D4',
-    glowColor: 'rgba(6,182,212,0.22)',
-    glowColor2: 'rgba(6,182,212,0.08)',
-    badgeBg: 'rgba(6,182,212,0.08)',
-    badgeBorder: 'rgba(6,182,212,0.22)',
-    separatorFrom: '#06B6D4',
-    photoSide: 'right' as const,
-    animX: 40,
-    delay: 0.22,
+    accentColor: '#3B82F6',
+    accentGradient: 'linear-gradient(90deg, #6366F1, #3B82F6)',
+    overlayFrom: '#0e0e14',
+    delay: 0.15,
   },
 ] as const;
 
@@ -44,276 +39,178 @@ export default function AboutSection() {
   return (
     <section
       id="about-section"
-      style={{ position: 'relative', overflow: 'hidden', background: '#0a0a0f' }}
+      style={{ position: 'relative', background: '#0e0e14', paddingTop: '96px', paddingBottom: '96px' }}
     >
-      {/* Fondo radial */}
-      <Box
-        aria-hidden="true"
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'radial-gradient(ellipse 80% 55% at 50% 100%, rgba(139,92,246,0.1) 0%, rgba(139,92,246,0.04) 45%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
+      {/* Radial glow */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'radial-gradient(circle at 50% 50%, rgba(139,92,246,0.05) 0%, transparent 70%)',
+      }} />
 
-      {/* Wrapper principal — 100vh en desktop, auto en mobile */}
-      <Box
-        sx={{
-          position: 'relative',
-          zIndex: 1,
-          height: { xs: 'auto', md: '100vh' },
-          minHeight: { xs: 'auto', md: '600px' },
-          display: 'flex',
-          flexDirection: 'column',
-          pt: { xs: '64px', md: '40px' },
-          pb: { xs: '64px', md: 0 },
-        }}
-      >
-        {/* ——— Encabezado ——— */}
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: '1280px', margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 4rem)' }}>
+
+        {/* ── Header ── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.65 }}
-          style={{ flexShrink: 0 }}
+          transition={{ duration: 0.6 }}
+          style={{ textAlign: 'center', marginBottom: '4rem' }}
         >
-          <Box
-            sx={{
-              textAlign: 'center',
-              pt: 0,
-              pb: { xs: '32px', md: '28px' },
-              px: 3,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 1.5 }}>
-              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
-              <Typography
-                sx={{
-                  fontSize: '11px',
-                  letterSpacing: '0.2em',
-                  color: 'rgba(139,92,246,0.8)',
-                  textTransform: 'uppercase',
-                  fontWeight: 600,
-                }}
-              >
-                LOS FUNDADORES
-              </Typography>
-              <Box sx={{ width: '24px', height: '1px', bgcolor: 'rgba(139,92,246,0.4)' }} />
-            </Box>
-
-            <Typography
-              variant="h2"
-              sx={{
-                fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
-                fontWeight: 700,
-                background: 'linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.65) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                mt: 1,
-                mb: 1.5,
-                lineHeight: 1.15,
-              }}
-            >
-              Las mentes detrás de NextFlow
-            </Typography>
-
-            <Typography
-              sx={{
-                fontSize: '0.875rem',
-                color: 'rgba(209,213,219,0.6)',
-              }}
-            >
-              Dos ingenieros que convirtieron su obsesión por la tecnología en una agencia.
-            </Typography>
-          </Box>
+          <span style={{
+            display: 'block',
+            fontFamily: 'var(--font-space-grotesk), sans-serif',
+            fontSize: '12px', fontWeight: 700, letterSpacing: '0.2em',
+            textTransform: 'uppercase', color: '#fbabff', marginBottom: '1rem',
+          }}>
+            EL EQUIPO
+          </span>
+          <h2 style={{
+            fontFamily: 'var(--font-space-grotesk), sans-serif',
+            fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em', margin: '0 0 1.25rem',
+            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+            background: 'linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}>
+            Las Mentes detrás de NextFlow
+          </h2>
+          <p style={{
+            fontFamily: 'var(--font-manrope), sans-serif',
+            fontSize: '1.0625rem', color: '#958ea0', maxWidth: '42ch', margin: '0 auto', lineHeight: 1.6,
+          }}>
+            Dos ingenieros que convirtieron su obsesión por la tecnología en una agencia de automatización con IA.
+          </p>
         </motion.div>
 
-        {/* ——— Grid de fundadores — ocupa el resto del alto ——— */}
-        <Box sx={{ flex: 1, overflow: 'hidden', pb: { xs: 0, md: '52px' } }}>
-          <Container maxWidth="xl" sx={{ height: '100%' }}>
-            <Grid
-              container
-              spacing={0}
-              sx={{ height: '100%' }}
+        {/* ── Founders grid ── */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))',
+          gap: '2.5rem',
+        }}>
+          {FOUNDERS.map((founder) => (
+            <motion.div
+              key={founder.name}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: founder.delay }}
             >
-              {FOUNDERS.map((founder) => {
-                const isLeft = founder.photoSide === 'left';
+              <div
+                style={{
+                  background: 'rgba(14,14,20,0.7)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: `0 0 0 1px rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.4)`,
+                  transition: 'transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease',
+                }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.transform = 'translateY(-6px)';
+                  el.style.boxShadow = `0 0 0 1px ${founder.accentColor}44, 0 16px 48px rgba(0,0,0,0.5), 0 0 40px ${founder.accentColor}22`;
+                  el.style.borderColor = `${founder.accentColor}44`;
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.transform = 'translateY(0)';
+                  el.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.4)';
+                  el.style.borderColor = 'rgba(255,255,255,0.08)';
+                }}
+              >
+                {/* Accent top bar */}
+                <div style={{ height: '4px', background: founder.accentGradient }} />
 
-                return (
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    key={founder.name}
-                    sx={{ height: { xs: 'auto', md: '100%' } }}
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, x: founder.animX }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.8, delay: founder.delay }}
-                      style={{ height: '100%' }}
-                    >
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: { xs: 'column', md: isLeft ? 'row' : 'row-reverse' },
-                          alignItems: { xs: 'center', md: 'stretch' },
-                          height: { xs: 'auto', md: '100%' },
-                          gap: { xs: 3, md: 4 },
-                          py: { xs: '32px', md: 0 },
-                          px: { xs: 3, md: 0 },
-                        }}
-                      >
-                        {/* ——— FOTO — se estira para llenar el alto ——— */}
-                        <Box
-                          sx={{
-                            position: 'relative',
-                            overflow: 'visible',
-                            flexShrink: 0,
-                            width: { xs: '200px', md: '42%' },
-                            height: { xs: '260px', md: 'auto' },
-                            alignSelf: { xs: 'center', md: 'stretch' },
+                {/* Image area */}
+                <div style={{ position: 'relative', height: '380px', overflow: 'hidden', background: '#0d0c18' }}>
+                  <img
+                    src={founder.image}
+                    alt={founder.name}
+                    style={{
+                      width: '100%', height: '100%',
+                      objectFit: 'contain', objectPosition: 'center bottom',
+                      display: 'block',
+                      transition: 'transform 0.7s ease',
+                    }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.03)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
+                  />
+
+                  {/* Gradient overlay — bottom strong */}
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: `linear-gradient(to top, ${founder.overlayFrom} 0%, ${founder.overlayFrom}99 20%, transparent 55%)`,
+                  }} />
+
+                  {/* Overlay content: badges + name + role */}
+                  <div style={{ position: 'absolute', bottom: '1.5rem', left: '1.5rem', right: '1.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                      {founder.badges.map(b => (
+                        <span
+                          key={b.label}
+                          style={{
+                            background: b.bg, color: b.color,
+                            border: `1px solid ${b.border}`,
+                            padding: '3px 10px', borderRadius: '9999px',
+                            fontSize: '10px', fontWeight: 700,
+                            letterSpacing: '0.1em', textTransform: 'uppercase',
+                            fontFamily: 'var(--font-space-grotesk), sans-serif',
                           }}
                         >
-                          {/* Glow atmosférico */}
-                          <Box
-                            aria-hidden="true"
-                            sx={{
-                              position: 'absolute',
-                              top: '-80px',
-                              left: isLeft ? '-100px' : '-40px',
-                              right: isLeft ? '-40px' : '-100px',
-                              bottom: '-80px',
-                              background: `radial-gradient(ellipse at ${isLeft ? '35%' : '65%'} 50%, ${founder.glowColor} 0%, ${founder.glowColor2} 45%, transparent 70%)`,
-                              filter: 'blur(60px)',
-                              zIndex: 0,
-                              pointerEvents: 'none',
-                            }}
-                          />
+                          {b.label}
+                        </span>
+                      ))}
+                    </div>
 
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.97 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: founder.delay + 0.12 }}
-                            style={{ position: 'relative', zIndex: 1, height: '100%' }}
-                          >
-                            <Box
-                              component="img"
-                              src={founder.image}
-                              alt={founder.name}
-                              sx={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                                objectPosition: 'top center',
-                                borderRadius: { xs: '16px', md: 0 },
-                                display: 'block',
-                                borderLeft: isLeft
-                                  ? 'none'
-                                  : { md: `1px solid ${founder.badgeBorder}` },
-                                borderRight: isLeft
-                                  ? { md: `1px solid ${founder.badgeBorder}` }
-                                  : 'none',
-                              }}
-                            />
-                          </motion.div>
-                        </Box>
+                    <h3 style={{
+                      fontFamily: 'var(--font-space-grotesk), sans-serif',
+                      fontSize: 'clamp(1.3rem, 2.5vw, 1.65rem)',
+                      fontWeight: 700, color: '#fff', margin: '0 0 0.25rem', lineHeight: 1.15,
+                    }}>
+                      {founder.name}
+                    </h3>
 
-                        {/* ——— INFO — centrado verticalmente ——— */}
-                        <Box
-                          sx={{
-                            flex: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: { xs: 'center', md: 'flex-start' },
-                            textAlign: { xs: 'center', md: 'left' },
-                            px: { xs: 0, md: isLeft ? '12px 56px 12px 40px' : '12px 40px 12px 56px' },
-                          }}
-                        >
-                          {/* Badge */}
-                          <Box
-                            component="span"
-                            sx={{
-                              display: 'inline-block',
-                              mb: 2,
-                              background: founder.badgeBg,
-                              color: founder.accent,
-                              border: `1px solid ${founder.badgeBorder}`,
-                              fontSize: '10px',
-                              letterSpacing: '0.15em',
-                              textTransform: 'uppercase',
-                              padding: '3px 12px',
-                              borderRadius: '20px',
-                              fontWeight: 600,
-                            }}
-                          >
-                            {founder.badge}
-                          </Box>
+                    <p style={{
+                      fontFamily: 'var(--font-space-grotesk), sans-serif',
+                      fontSize: '0.8125rem', fontWeight: 500,
+                      color: founder.accentColor,
+                      margin: 0, letterSpacing: '0.02em',
+                    }}>
+                      {founder.role}
+                    </p>
+                  </div>
+                </div>
 
-                          {/* Nombre */}
-                          <Typography
-                            component="h3"
-                            sx={{
-                              fontSize: 'clamp(1.3rem, 1.8vw, 1.7rem)',
-                              fontWeight: 700,
-                              color: '#FFFFFF',
-                              mb: 0.5,
-                              lineHeight: 1.2,
-                            }}
-                          >
-                            {founder.name}
-                          </Typography>
+                {/* Info area */}
+                <div style={{
+                  padding: '1.75rem 1.75rem 2rem',
+                  borderLeft: `3px solid ${founder.accentColor}44`,
+                  background: 'rgba(255,255,255,0.015)',
+                  position: 'relative',
+                }}>
+                  {/* Decorative glow behind text */}
+                  <div aria-hidden="true" style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: '60px',
+                    background: `linear-gradient(to bottom, ${founder.accentColor}0a, transparent)`,
+                    pointerEvents: 'none',
+                  }} />
 
-                          {/* Rol */}
-                          <Typography
-                            sx={{
-                              fontSize: '0.875rem',
-                              fontWeight: 500,
-                              color: founder.accent,
-                              mb: 2.5,
-                            }}
-                          >
-                            {founder.role}
-                          </Typography>
+                  <p style={{
+                    fontFamily: 'var(--font-manrope), sans-serif',
+                    fontSize: '0.9375rem', color: '#a09aaa',
+                    lineHeight: 1.75, margin: 0,
+                    position: 'relative',
+                  }}>
+                    {founder.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
-                          {/* Separador */}
-                          <Box
-                            sx={{
-                              width: '36px',
-                              height: '2px',
-                              background: `linear-gradient(to right, ${founder.separatorFrom}, transparent)`,
-                              mb: 2.5,
-                            }}
-                          />
-
-                          {/* Descripción */}
-                          <Typography
-                            sx={{
-                              fontSize: '0.875rem',
-                              color: 'rgba(209,213,219,0.75)',
-                              lineHeight: 1.75,
-                              maxWidth: '320px',
-                            }}
-                          >
-                            {founder.description}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </motion.div>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Container>
-        </Box>
-      </Box>
+      </div>
     </section>
   );
 }

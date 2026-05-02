@@ -1,7 +1,20 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { Space_Grotesk, Manrope } from 'next/font/google';
 import Providers from '@/components/providers/Providers';
 import './globals.css';
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  display: 'swap',
+});
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  variable: '--font-manrope',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
@@ -73,7 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className={`${spaceGrotesk.variable} ${manrope.variable}`}>
         <Providers>{children}</Providers>
 
         {/* Google Analytics — afterInteractive para no bloquear el render */}

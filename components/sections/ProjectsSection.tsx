@@ -32,7 +32,7 @@ export default function ProjectsSection() {
         position: 'relative',
         width: '100%',
         minHeight: '100vh',
-        background: '#09090f',
+        background: '#0e0e14',
         paddingTop: '100px',
         paddingBottom: '100px',
       }}
@@ -182,53 +182,72 @@ export default function ProjectsSection() {
                             ? '1px solid rgba(139,92,246,0.2)'
                             : '1px solid rgba(255,255,255,0.08)',
                           borderRadius: '16px',
-                          p: 3,
+                          overflow: 'hidden',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: 2,
                           transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
                           '&:hover': {
                             transform: 'translateY(-5px)',
                             borderColor: 'rgba(139,92,246,0.35)',
                             boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
                           },
+                          '&:hover .project-img': {
+                            transform: 'scale(1.05)',
+                          },
                         }}
                       >
-                        {/* Categoría badge */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <Chip
-                            label={project.category}
-                            size="small"
+                        {/* Imagen */}
+                        <Box sx={{ position: 'relative', height: '180px', overflow: 'hidden', flexShrink: 0, background: '#0d0c18' }}>
+                          <Box
+                            component="img"
+                            src={project.image}
+                            alt={project.name}
+                            className="project-img"
                             sx={{
-                              background: accent.bg,
-                              color: accent.text,
-                              border: `1px solid ${accent.text}33`,
-                              fontSize: '0.7rem',
-                              fontWeight: 600,
-                              letterSpacing: '0.05em',
-                              textTransform: 'uppercase',
-                              height: '22px',
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              objectPosition: 'center top',
+                              display: 'block',
+                              transition: 'transform 0.5s ease',
                             }}
                           />
-                          {project.featured && (
-                            <Box
+                          {/* Gradient overlay bottom */}
+                          <Box sx={{
+                            position: 'absolute', inset: 0,
+                            background: 'linear-gradient(to top, rgba(14,14,20,0.85) 0%, transparent 55%)',
+                          }} />
+                          {/* Badges sobre la imagen */}
+                          <Box sx={{ position: 'absolute', bottom: 10, left: 12, right: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Chip
+                              label={project.category}
+                              size="small"
                               sx={{
+                                background: accent.bg,
+                                color: accent.text,
+                                border: `1px solid ${accent.text}33`,
                                 fontSize: '0.65rem',
                                 fontWeight: 600,
-                                letterSpacing: '0.1em',
+                                letterSpacing: '0.05em',
                                 textTransform: 'uppercase',
-                                color: 'rgba(139,92,246,0.8)',
-                                background: 'rgba(139,92,246,0.1)',
-                                border: '1px solid rgba(139,92,246,0.2)',
-                                px: 1,
-                                py: 0.25,
-                                borderRadius: '4px',
+                                height: '20px',
                               }}
-                            >
-                              DESTACADO
-                            </Box>
-                          )}
+                            />
+                            {project.featured && (
+                              <Box sx={{
+                                fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.1em',
+                                textTransform: 'uppercase', color: 'rgba(139,92,246,0.9)',
+                                background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.3)',
+                                px: 1, py: 0.25, borderRadius: '4px',
+                              }}>
+                                DESTACADO
+                              </Box>
+                            )}
+                          </Box>
                         </Box>
+
+                        {/* Contenido */}
+                        <Box sx={{ p: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5, flexGrow: 1 }}>
 
                         {/* Nombre */}
                         <Typography
@@ -294,6 +313,7 @@ export default function ProjectsSection() {
                             </Box>
                           ))}
                         </Box>
+                        </Box>{/* end contenido */}
                       </Box>
                     </motion.div>
                   </Grid>

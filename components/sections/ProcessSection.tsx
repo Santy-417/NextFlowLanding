@@ -76,7 +76,7 @@ export default function ProcessSection() {
         position: 'relative',
         width: '100vw',
         minHeight: '100vh',
-        background: '#000000',
+        background: '#0e0e14',
         paddingTop: '100px',
         paddingBottom: '100px',
       }}

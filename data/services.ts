@@ -9,7 +9,8 @@ export const services: Service[] = [
     id: 'web-mobile-development',
     title: 'Desarrollo Web y Móvil',
     description: 'Creamos aplicaciones web y móviles a medida, optimizadas y escalables.',
-    icon: 'Code', // Material UI icon: CodeIcon
+    icon: 'Code',
+    image: '/images/services/web-mobile.jpg',
     features: [
       'Aplicaciones web responsive',
       'Apps móviles nativas y multiplataforma',
@@ -23,7 +24,8 @@ export const services: Service[] = [
     id: 'automation-n8n',
     title: 'Automatizaciones con n8n',
     description: 'Automatiza procesos empresariales y conecta tus herramientas con flujos inteligentes.',
-    icon: 'AccountTree', // Material UI icon: AccountTreeIcon
+    icon: 'AccountTree',
+    image: '/images/services/automation-n8n.jpg',
     features: [
       'Automatización de procesos manuales',
       'Integración de múltiples plataformas',
@@ -37,7 +39,8 @@ export const services: Service[] = [
     id: 'crm-automation',
     title: 'Automatización de CRM',
     description: 'Optimiza la gestión de clientes con automatizaciones inteligentes.',
-    icon: 'People', // Material UI icon: PeopleIcon
+    icon: 'People',
+    image: '/images/services/crm-automation.jpg',
     features: [
       'Integración con CRMs populares',
       'Automatización de seguimiento de leads',
@@ -51,7 +54,8 @@ export const services: Service[] = [
     id: 'mcp-servers',
     title: 'Servidores MCP',
     description: 'Implementación de Model Context Protocol para sistemas avanzados.',
-    icon: 'Storage', // Material UI icon: StorageIcon
+    icon: 'Storage',
+    image: '/images/services/mcp-servers.jpg',
     features: [
       'Configuración de servidores MCP',
       'Integración con modelos de IA',
@@ -65,7 +69,8 @@ export const services: Service[] = [
     id: 'ai-solutions',
     title: 'Soluciones con IA',
     description: 'Implementamos inteligencia artificial para resolver problemas complejos.',
-    icon: 'Psychology', // Material UI icon: PsychologyIcon
+    icon: 'Psychology',
+    image: '/images/services/ai-solutions.jpg',
     features: [
       'Chatbots inteligentes',
       'Análisis de datos con IA',
@@ -79,7 +84,8 @@ export const services: Service[] = [
     id: 'tech-consulting',
     title: 'Consultoría Tecnológica',
     description: 'Transformamos procesos manuales en flujos automáticos con IA.',
-    icon: 'Lightbulb', // Material UI icon: LightbulbIcon
+    icon: 'Lightbulb',
+    image: '/images/services/tech-consulting.jpg',
     features: [
       'Auditoría de procesos actuales',
       'Estrategia de transformación digital',

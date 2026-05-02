@@ -59,7 +59,7 @@ export default function TechStackSection() {
         position: 'relative',
         width: '100vw',
         minHeight: '100vh',
-        background: '#0A0A0A',
+        background: '#0e0e14',
         paddingTop: '100px',
         paddingBottom: '100px',
       }}
