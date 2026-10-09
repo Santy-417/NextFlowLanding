@@ -99,14 +99,104 @@ El proyecto usa rutas dinámicas con locale:
 ### Theme System
 
 - **MUI Theme**: Definido en `lib/theme.ts` con colores de NextFlow
-- **Paleta de colores**:
-  - Primary (Morado): `#8B5CF6`
-  - Secondary (Azul): `#3B82F6`
-  - Accent (Magenta): `#D946EF` - Usar para CTAs
-  - Hero Background: `#0f0720` - Morado oscuro profundo para HeroSection
-  - Neon Effects: `#b800ff`, `#ff00d4`, `#ff00f7` - Para blobs difuminados
 - **Modo oscuro**: Manejado por Providers con localStorage persistence
 - **Tailwind**: Integrado con MUI, usar utility classes cuando sea apropiado
+
+### Paleta de Colores Completa
+
+```
+/* Backgrounds */
+Hero / NAIASection:    #030303
+Contact / alternadas:  #09090f
+Cards / modales:       #111827   (gray-900)
+Cards hover:           rgba(255,255,255,0.05)
+
+/* Brand */
+Primary (morado):      #8B5CF6
+Primary dark:          #7C3AED
+Primary light:         #A78BFA
+Secondary (azul):      #3B82F6
+Accent (magenta):      #D946EF   ← CTAs, highlights
+Accent hover:          #C026D3
+
+/* Texto */
+Principal:             #FFFFFF
+Secundario:            #D1D5DB   (gray-300)
+Muted:                 #9CA3AF   (gray-400)
+Disabled:              #6B7280   (gray-500)
+
+/* Funcionales */
+WhatsApp:              #25D366
+Error:                 #EF4444
+Warning:               #F59E0B
+Instagram:             #E879F9
+
+/* Neon effects */
+Neon 1:                #b800ff
+Neon 2:                #ff00d4
+Neon 3:                #ff00f7
+```
+
+### Gradientes Estándar
+
+```css
+/* Avatar NAIA / badge primario */
+linear-gradient(135deg, #7C3AED, #C026D3)
+
+/* Texto label NAIA */
+linear-gradient(135deg, #A78BFA 0%, #F0ABFC 50%, #67E8F9 100%)
+
+/* Botones CTA */
+linear-gradient(to right, #7C3AED, #C026D3)
+
+/* Títulos de sección hero */
+linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0.65) 100%)
+
+/* Fondo eyebrow badge */
+rgba(139, 92, 246, 0.1), border rgba(139, 92, 246, 0.2)
+```
+
+### Tipografía Responsiva
+
+```css
+Hero headline:   clamp(1.5rem, 3.5vw, 2.75rem)
+Section titles:  clamp(2rem, 4vw, 3.2rem)
+Subtítulos:      clamp(0.875rem, 1.2vw, 1rem)
+Body:            1rem / line-height 1.7
+Labels:          0.875rem
+Eyebrow:         11px, letter-spacing 0.2em, uppercase
+
+/* Pesos */
+Títulos:         font-weight 700
+Semibold:        font-weight 600
+Body:            font-weight 400
+Letter spacing:  -0.02em (títulos)
+```
+
+### Estilos de Cards (proyectos / servicios)
+
+```css
+background: rgba(255,255,255,0.03)
+border: 1px solid rgba(255,255,255,0.07)
+border-radius: 16px (projects) / 12px (contact)
+backdrop-filter: blur(8px)
+transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease
+
+/* Hover */
+background: rgba(255,255,255,0.05)
+border-color: rgba(139,92,246,0.4)
+transform: translateY(-8px)
+box-shadow: 0 20px 40px rgba(139,92,246,0.15)
+```
+
+### Glassmorphism (chat, inputs, paneles)
+
+```css
+background: rgba(255,255,255,0.04)
+border: 1px solid rgba(255,255,255,0.09)
+backdrop-filter: blur(12px)
+border-radius: 12px–20px
+```
 
 ### Background Effects en NAIASection
 
@@ -151,8 +241,9 @@ Orden de las secciones en la home:
 3. **ServicesSection** - Grid de servicios con iconos MUI (destacar n8n)
 4. **ProjectsSection** - Portfolio con filtros por categoría
 5. **ClientsSection** - Logos y casos de éxito
-6. **CTASection** - Call to action para agendar consultoría
-7. **ContactSection** - Formulario de contacto con validación
+6. **PricingSection** - Planes de cotización (filtros, tabla comparativa y calculadora de crédito)
+7. **CTASection** - Call to action para agendar consultoría
+8. **ContactSection** - Formulario de contacto con validación
 
 #### NAIASection - Detalles de Implementación
 
@@ -418,23 +509,37 @@ Editar `data/services.ts`:
 
 ### Agregar un Nuevo Proyecto
 
-1. Agregar screenshot en `public/images/projects/[proyecto].jpg`
+Los proyectos usan **nombres en código** para preservar la privacidad de los clientes (Tobias = 2becom, Bella = beautyglo, etc.). El nombre del cliente real NO debe aparecer en ningún archivo del repositorio.
+
+1. Agregar screenshot en `public/images/projects/[codigo].jpg` (1200×800px)
 2. Editar `data/projects.ts`:
 
 ```typescript
 {
-  id: 'nuevo-proyecto',
-  name: 'Nombre del Proyecto',
-  description: 'Descripción breve para card',
-  howItWorks: 'Explicación de cómo funciona',
-  problemSolved: 'Qué problema resuelve',
-  technologies: ['Tech1', 'Tech2', 'Tech3'],
-  image: '/images/projects/nuevo.jpg',
+  id: 'codigo-proyecto',       // slug del nombre en código
+  name: 'CODIGO — Descripción corta del sistema',
+  description: 'Descripción breve para card (2 líneas máx)',
+  howItWorks: 'Explicación técnica de cómo funciona',
+  problemSolved: 'Resultado tangible que generó',
+  technologies: ['Tech1', 'Tech2', 'Tech3', 'Tech4'],
+  image: '/images/projects/codigo.jpg',
   category: 'automation', // 'automation' | 'ai' | 'web' | 'mobile'
-  featured: false,
-  order: 6,
+  featured: false,         // true = aparece primero, badge "Destacado"
+  order: 8,
 }
 ```
+
+**Proyectos actuales** (nunca mencionar el cliente real):
+
+| id | Nombre | Cliente real | Categoría |
+|----|--------|-------------|-----------|
+| tobias | Tobias — 2B AI System | 2becom | ai |
+| naia | NAIA — Nextflow AI Assistant | interno | ai |
+| lia | LIA — Lead Intelligence Assistant | — | ai |
+| tina | TINA — Task Intelligence Assistant | — | automation |
+| bella | Bella — Beauty Efficiency Automation | beautyglo | automation |
+| aria | ARIA — Automated Routing Assistant | — | automation |
+| musa | MUSA — Marketing Studio Assistant | — | ai |
 
 ## Deployment
 

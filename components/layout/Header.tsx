@@ -11,6 +11,7 @@ const navItems = [
   { key: 'about',    label: 'Nosotros',  href: '#about-section', scrollTop: false },
   { key: 'services', label: 'Servicios', href: '#services',      scrollTop: false },
   { key: 'projects', label: 'Proyectos', href: '#projects',      scrollTop: false },
+  { key: 'pricing',  label: 'Planes',    href: '#pricing',       scrollTop: false },
   { key: 'contact',  label: 'Contacto',  href: '#contact',       scrollTop: false },
 ];
 
